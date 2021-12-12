@@ -17,7 +17,8 @@ int main(){
     for(int x = 0; x < input.size(); x++){
         for(int y = x; y < input.size(); y++){
             if(input[x] + input[y]== 2020){
-                std::cout << (input[x] * input[y]) << std::endl; 
+                std::cout << (input[x] * input[y]) << std::endl;
+                return 0;
             }
         }
     }
