@@ -18,8 +18,10 @@ void traverseNode(std::set<std::string> branches){
         pathways.push(pathway);
 
         if(branch != "end"){
-            if(!isupper(branch[0]))
+            if(!isupper(branch[0])){
                 ++pathways.top()[branch];
+                
+            }
             traverseNode(nodes[branch]);
         }else
             completePaths++;
