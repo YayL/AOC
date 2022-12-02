@@ -1,38 +1,38 @@
 #include <bits/stdc++.h>
 
 #define PRINT(x) std::cout << x << std::endl;
-#define PRINTS(x) std::cout << x;
 
-std::unordered_map<std::string, std::set<std::string>> nodes;
-std::stack<std::unordered_map<std::string, int>> pathways;
-int completePaths;
+std::map<std::string, std::set<std::string>> nodes;
+std::map<std::string, int> pathways;
+int completePaths = 0;
 
-void traverseNode(std::set<std::string> branches){
-    auto pathway = pathways.top();
-
+void traverseNode(const std::set<std::string> branches){
+    auto pathway = pathways;
+    std::map<std::string, int>::iterator br;
+    
     for(auto &branch : branches){
-        if(!pathway.empty() && pathway.find(branch) != pathway.end()){
+        if(!pathways.empty() && br != pathways.end())
             continue;
-        }
-
-        pathways.push(pathway);
-
-        if(branch != "end"){
+        else if(branch != "end"){
             if(!isupper(branch[0])){
-                ++pathways.top()[branch];
-                
+                br = pathways.find(branch);
+                if(br == pathways.end())
+                    br = pathways.emplace_hint(pathways.begin(), std::make_pair(branch, 0));
+                ++br->second;
             }
-            traverseNode(nodes[branch]);
-        }else
+            traverseNode(nodes.find(branch)->second);
+        }else{
             completePaths++;
-        pathways.pop();
+        }
+        pathways = pathway;
     }
 }
 
 int main(){
-    std::vector<std::string> input;
+
+    clock_t start = clock();
+
     std::ifstream file("../input.txt", std::ios::in);
-    
     std::string line;
     
     while(file >> line){
@@ -51,8 +51,11 @@ int main(){
     }
     file.close();
 
-    pathways.push(std::unordered_map<std::string, int>());
+    clock_t algoStart = clock();
     traverseNode(nodes["start"]);
+    clock_t end = clock();
 
     PRINT("Count: " << completePaths);
+    printf("Total time: %.2fms\n", ((double)(end - start)/CLOCKS_PER_SEC) * 1000);
+    printf("Time for DFS: %.2fms\n", ((double)(end - algoStart)/CLOCKS_PER_SEC) * 1000);
 }

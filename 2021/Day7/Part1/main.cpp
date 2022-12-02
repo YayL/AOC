@@ -18,7 +18,7 @@ int main(){
     while(fscanf(file, "%i", &num) != EOF && fgetc(file)){
         if(num > max)
             max = num;
-        heights.push_back(num);   
+        heights.push_back(num);
     }
 
     std::vector<int> fuels;

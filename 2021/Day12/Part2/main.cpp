@@ -6,7 +6,7 @@ std::map<std::string, std::set<std::string>> nodes;
 std::map<std::string, int> pathways;
 int completePaths = 0;
 
-void traverseNode(const std::set<std::string> branches, bool hasVisited2 = false){
+void traverseNode(const std::set<std::string>& branches, bool hasVisited2 = false){
     auto pathway = pathways;
     std::map<std::string, int>::iterator br;
     
@@ -55,8 +55,9 @@ int main(){
 
     clock_t algoStart = clock();
     traverseNode(nodes["start"]);
+    clock_t end = clock();
 
     PRINT("Count: " << completePaths);
-    printf("Total time: %.2fms\n", ((double)(clock() - start)/CLOCKS_PER_SEC) * 1000);
-    printf("Time for DFS: %.2fms\n", ((double)(clock() - algoStart)/CLOCKS_PER_SEC) * 1000);
+    printf("Total time: %.2fms\n", ((double)(end - start)/CLOCKS_PER_SEC) * 1000);
+    printf("Time for DFS: %.2fms\n", ((double)(end - algoStart)/CLOCKS_PER_SEC) * 1000);
 }

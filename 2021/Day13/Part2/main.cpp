@@ -65,6 +65,6 @@ int main() {
 	}
 
 	PRINT("Results: \n");
-	printf("Total time: %.3fms\n", (((double)end - input)/CLOCKS_PER_SEC) * 1000);
-	printf("Time for flip: %.3fms\n", (((double)end - algoStart)/CLOCKS_PER_SEC) * 1000);
+	printf("Total time: %.3fms(Input & Setup Included)\n", (((double)end - input)/CLOCKS_PER_SEC) * 1000);
+	printf("Time for flip: %.3fms(Input & Setup Excluded)\n", (((double)end - algoStart)/CLOCKS_PER_SEC) * 1000);
 }

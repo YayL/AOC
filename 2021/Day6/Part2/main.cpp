@@ -3,7 +3,7 @@
 int main(){
     std::ifstream file("../input.txt", std::ios::in);
     std::string line;
-    ulong *arr = (ulong*) calloc(9, sizeof(ulong));
+    ulong arr[9] {0};
 
     file >> line;
     std::stringstream ss (line);
