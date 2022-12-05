@@ -45,17 +45,29 @@ long HashCode(HashMap * map, const char * key) {
 	return hash_value % map->capacity;
 }
 
-long HM_get(HashMap * map, const char * key) {
+long * HM_get(HashMap * map, const char * key) {
 	Pair * current = map->bucket_list[HashCode(map, key)];
 
 	while (current) {
 		if (!strcmp(current->key, key))
-			return current->value;
+			return &current->value;
 		current = current->next;
 	}
 
 	println("[HashMap]: Key '{s}' was not found", key);
 	exit(1);
+}
+
+long HM_has(HashMap * map, const char * key) {
+	Pair * current = map->bucket_list[HashCode(map, key)];
+
+	while (current) {
+		if (!strcmp(current->key, key))
+			return 1;
+		current = current->next;
+	}
+
+	return 0;
 }
 
 void HM_set(HashMap * map, const char * key, long value) {
