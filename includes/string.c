@@ -15,9 +15,9 @@ String * new_string(const char * str) {
 	new_str->length = strlen(str);
 	
 	char * temp_str = malloc((new_str->length + 1) * sizeof(char));
-	
+
 	memcpy(temp_str, str, new_str->length);
-	temp_str[new_str->length + 1] = 0;
+	temp_str[new_str->length] = 0;
 	new_str->c_str = temp_str;
 
 	return new_str;

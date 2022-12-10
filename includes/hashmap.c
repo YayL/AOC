@@ -15,11 +15,11 @@ typedef struct hashmap {
 	size_t total;
 } HashMap;
 
-HashMap * new_HashMap(size_t capacity) {
+HashMap * new_HashMap(size_t pow_capacity) {
 
 	HashMap * map = malloc(sizeof(HashMap));
 	
-	map->capacity = capacity;
+	map->capacity = (2 << pow_capacity) - 1;
 	map->buckets = 0;
 	map->total = 0;
 
@@ -42,7 +42,7 @@ long HashCode(HashMap * map, const char * key) {
 		p_pow = (p_pow * p) & m;
 	}
 	
-	return hash_value % map->capacity;
+	return hash_value & map->capacity;
 }
 
 long * HM_get(HashMap * map, const char * key) {
