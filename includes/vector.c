@@ -46,7 +46,7 @@ long vector_pop(struct Vector * vector) {
 		exit(1);
 	}
 	
-	return vector->items[vector->size--];
+	return vector->items[--vector->size];
 }
 
 void vector_shrink(struct Vector * vector, unsigned int new_size) {	
