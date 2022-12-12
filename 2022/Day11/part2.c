@@ -43,11 +43,11 @@ int main() {
 		monkey->items = init_vector();
 		int length = (nextline() - 16) >> 2;
 		for (int i = 0; i < length; ++i) {
-			// int num = 10 * to_num(line[18 + (i << 2)])
+			//int num = 10 * to_num(line[18 + (i << 2)])
 			// 			 + to_num(line[19 + (1 << 2)]);
 			vector_push(monkey->items, 10 * to_num(line[18 + (i << 2)])
 										  + to_num(line[19 + (i << 2)]));
-			//println("{2li: = }", num, vector_at(monkey->items, i));
+			//println("{i} = {i}", num, vector_at(monkey->items, i));
 		}
 		nextline();
 		sscanf(line, "%*s new = old %c %ms", 
@@ -133,7 +133,7 @@ int gcd(int x, int y) {
 	int temp;
 	while (y) {
 		temp = y;
-		y = x%y;
+		y = x % y;
 		x = temp;
 	}
 	return x;

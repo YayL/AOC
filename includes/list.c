@@ -21,10 +21,10 @@ struct List * init_list(size_t item_size) {
 
 void free_list(struct List * list) {
 
-	for(size_t i = 0; i < list->size; ++i) {
-		memset(list->items[i], 0, list->item_size);
-		free(list->items[i]);
-	}
+	// for(size_t i = 0; i < list->size; ++i) {
+	// 	memset(list->items[i], 0, list->item_size);
+	// 	free(list->items[i]);
+	// }
 	free(list->items);
 	free(list);
 
