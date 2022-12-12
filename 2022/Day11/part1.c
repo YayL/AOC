@@ -41,11 +41,8 @@ int main() {
 		monkey->items = init_vector();
 		int length = (nextline() - 16) >> 2;
 		for (int i = 0; i < length; ++i) {
-			// int num = 10 * to_num(line[18 + (i << 2)])
-			// 			 + to_num(line[19 + (1 << 2)]);
 			vector_push(monkey->items, 10 * to_num(line[18 + (i << 2)])
 										  + to_num(line[19 + (i << 2)]));
-			//println("{2li: = }", num, vector_at(monkey->items, i));
 		}
 		nextline();
 		sscanf(line, "%*s new = old %c %ms", 
@@ -61,7 +58,6 @@ int main() {
 			list_push(monkeys, monkey);
 		}
 	}
-
 
 	for (int round = 0; round < 20; ++round) {
 		for (int i = 0; i < monkeys->size; ++i) {
@@ -96,7 +92,6 @@ int main() {
 	int product = 1, max1 = 0, max2 = 0;
 	for (int i = 0; i < monkeys->size; ++i) {
 		monkey = list_at(monkeys, i);
-		println("{i}", monkey->inspected);
 		if (monkey->inspected > max1) {
 			if (max1 > max2)
 				max2 = max1;
