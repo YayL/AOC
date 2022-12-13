@@ -59,6 +59,7 @@ int main() {
 				Pos * temp = malloc(sizeof(Pos));
 				temp->x = x;
 				temp->y = y;
+				check(x, y) = 1;
 				insert(pq, init_mh_node(temp, NULL, 0, 0));
 			}
 		}
@@ -123,5 +124,4 @@ int main() {
 	unsigned long end = micros();
 	println("Length: {i}", shortest->compare + 1);
 	println("Execution Time: {lu}", (end - start));
-
 }

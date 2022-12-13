@@ -19,11 +19,11 @@ HashMap * new_HashMap(size_t pow_capacity) {
 
 	HashMap * map = malloc(sizeof(HashMap));
 	
-	map->capacity = (2 << pow_capacity) - 1;
+	map->capacity = (1 << pow_capacity) - 1;
 	map->buckets = 0;
 	map->total = 0;
 
-	map->bucket_list = calloc(map->capacity, sizeof(Pair *));
+	map->bucket_list = calloc(map->capacity + 1, sizeof(Pair *));
 
 	return map;
 }
@@ -166,10 +166,3 @@ void HM_free(HashMap * map) {
 	free(map->bucket_list);
 	free(map);
 }
-
-void MH_resize(HashMap * map, size_t capacity) {
-
-	
-
-}
-
