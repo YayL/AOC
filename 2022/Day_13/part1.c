@@ -20,7 +20,6 @@ typedef struct pack {
 } Pack;
 
 struct List * parse_packet();
-void print_packet();
 int match();
 int check();
 
@@ -64,9 +63,6 @@ int match(char * line1, size_t len1, char * line2, size_t len2) {
 	Pack * second = malloc(sizeof(Pack *));
 	second->list = parse_packet(line2, start, len2);
 	free(start);
-	
-	// print_packet(first);
-	// print_packet(second);
 	
 	return check(first, second);
 }

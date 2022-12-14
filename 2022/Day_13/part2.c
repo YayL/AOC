@@ -16,8 +16,6 @@ typedef struct pack {
 } Pack;
 
 Pack * parse_packet();
-void print_packet();
-int match();
 int check();
 
 int main() {
