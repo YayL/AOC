@@ -81,6 +81,10 @@ void range_insert (Range * root, Range * range) {
 	range_sweep(root);
 }
 
+void range_insert_p (Range * root, int point) {
+	range_insert(root, new_range(point, point));
+}
+
 void range_bisect(Range * root, long long point) {
 
 	Range * first = range_get_intersection(root, point);

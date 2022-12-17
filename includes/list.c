@@ -1,6 +1,7 @@
 #pragma once
 #include <stdlib.h>
 #include <string.h>
+#include "fmt.c"
 
 struct List {
 	void** items;
@@ -20,11 +21,11 @@ struct List * init_list(size_t item_size) {
 }
 
 void free_list(struct List * list) {
-
-	// for(size_t i = 0; i < list->size; ++i) {
-	// 	memset(list->items[i], 0, list->item_size);
-	// 	free(list->items[i]);
-	// }
+	void * item;
+	for(size_t i = 0; i < list->size; ++i) {
+		item = list->items[i];
+		free(item);
+	}
 	free(list->items);
 	free(list);
 
@@ -74,6 +75,15 @@ void list_reserve(struct List * list, unsigned int additions) {
 	list->capacity += additions;
 	list->items = realloc(list->items, list->capacity * list->item_size);
 
+}
+
+char list_contains (struct List * list, void * item) {
+
+	for (int i = 0; i < list->size; ++i) {
+		if (list->items[i] == item)
+			return 1;
+	}
+	return 0;
 }
 
 void * list_copy(struct List * list) {

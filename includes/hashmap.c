@@ -4,7 +4,7 @@
 
 typedef struct pair {
 	char * key;
-	long value;
+	void * value;
 	struct pair * next;
 } Pair;
 
@@ -35,25 +35,25 @@ long HashCode(HashMap * map, const char * key) {
 	
 	long long hash_value = 0;
 	long long p_pow = 1;
-	int i = 0;
 
-	while (key[i]) {
-		hash_value += (hash_value + (key[i++] - ' ' + 1) * p_pow) & m;
+	for (int i = 0; key[i]; ++i) {
+		hash_value += (hash_value + (key[i] - ' ' + 1) * p_pow) & m;
 		p_pow = (p_pow * p) & m;
 	}
 	
 	return hash_value & map->capacity;
 }
 
-long * HM_get(HashMap * map, const char * key) {
+void * HM_get(HashMap * map, const char * key) {
 	Pair * current = map->bucket_list[HashCode(map, key)];
 
 	while (current) {
 		if (!strcmp(current->key, key))
-			return &current->value;
+			return current->value;
 		current = current->next;
 	}
-
+	
+	return NULL;
 	println("[HashMap]: Key '{s}' was not found", key);
 	exit(1);
 }
@@ -70,7 +70,7 @@ long HM_has(HashMap * map, const char * key) {
 	return 0;
 }
 
-void HM_set(HashMap * map, const char * key, long value) {
+void HM_set(HashMap * map, char * key, void* value) {
 
 	long long index = HashCode(map, key);
 	Pair * current = map->bucket_list[index];
@@ -81,14 +81,10 @@ void HM_set(HashMap * map, const char * key, long value) {
 			return;
 		}
 		current = current->next;
-	}	
-	
-	size_t str_len = strlen(key);
-	char * key_copy = malloc((str_len + 1) * sizeof(char));
-	strcpy(key_copy, key);
+	}
 
     Pair * p = malloc(sizeof(Pair));
-    p->key = key_copy;
+    p->key = key;
     p->value = value;
     p->next = map->bucket_list[index];
 	if (p->next == NULL)
@@ -97,7 +93,7 @@ void HM_set(HashMap * map, const char * key, long value) {
     map->total++;
 }
 
-long long HM_remove(HashMap * map, const char * key) {
+void * HM_remove(HashMap * map, const char * key) {
 	
 	long long index = HashCode(map, key);
 	Pair * current = map->bucket_list[index], * temp;
@@ -128,7 +124,7 @@ long long HM_remove(HashMap * map, const char * key) {
 	--map->total;
 
 
-	long long value = current->value;
+	void * value = current->value;
 	
 	free(current->key);
 	free(current);
