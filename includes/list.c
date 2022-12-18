@@ -45,12 +45,13 @@ void list_push(struct List * list, void* item) {
 	list->items[list->size - 1] = item;
 }
 
-void list_pop(struct List * list) {
+void * list_pop(struct List * list) {
 	if(!list->size) 
-		return;
+		return NULL;
 
+	void * temp = list->items[--list->size];
 	list->items[list->size] = NULL;
-	free(list->items[list->size--]);
+	return temp;
 }
 
 void list_shrink(struct List * list, unsigned int new_size) {	
