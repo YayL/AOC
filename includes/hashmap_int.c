@@ -2,14 +2,14 @@
 #include "fmt.c"
 #include "string.c"
 
-typedef struct HM_pair {
-	char * key;
-	void * value;
-	struct HM_pair * next;
-} HM_Pair;
+typedef struct pair {
+	long key;
+	long value;
+	struct pair * next;
+} Pair;
 
 typedef struct hashmap {
-	HM_Pair ** bucket_list;
+	Pair ** bucket_list;
 	size_t capacity;
 	size_t buckets;
 	size_t total;
@@ -23,46 +23,33 @@ HashMap * new_HashMap(size_t pow_capacity) {
 	map->buckets = 0;
 	map->total = 0;
 
-	map->bucket_list = calloc(map->capacity + 1, sizeof(HM_Pair *));
+	map->bucket_list = calloc(map->capacity + 1, sizeof(Pair *));
 
 	return map;
 }
 
-long HM_HashCode(HashMap * map, const char * key) {
-
-	const int p = (2 << 7) - 1;
-	const int m = (2 << 24) - 1;
-	
-	long long hash_value = 0;
-	long long p_pow = 1;
-
-	for (int i = 0; key[i]; ++i) {
-		hash_value += (hash_value + (key[i] - ' ' + 1) * p_pow) & m;
-		p_pow = (p_pow * p) & m;
-	}
-	
-	return hash_value & map->capacity;
+long HashCode(HashMap * map, long key) {
+	return key & map->capacity;
 }
 
-void * HM_get(HashMap * map, const char * key) {
-	HM_Pair * current = map->bucket_list[HM_HashCode(map, key)];
+long * HM_get(HashMap * map, long key) {
+	Pair * current = map->bucket_list[HashCode(map, key)];
 
 	while (current) {
-		if (!strcmp(current->key, key))
-			return current->value;
+		if (current->key == key)
+			return &current->value;
 		current = current->next;
 	}
-	
-	return NULL;
-	println("[HashMap]: Key '{s}' was not found", key);
+
+	println("[HashMap]: Key '{li}' was not found", key);
 	exit(1);
 }
 
-long HM_has(HashMap * map, const char * key) {
-	HM_Pair * current = map->bucket_list[HM_HashCode(map, key)];
+long HM_has(HashMap * map, long key) {
+	Pair * current = map->bucket_list[HashCode(map, key)];
 
 	while (current) {
-		if (!strcmp(current->key, key))
+		if (current->key == key)
 			return 1;
 		current = current->next;
 	}
@@ -70,20 +57,21 @@ long HM_has(HashMap * map, const char * key) {
 	return 0;
 }
 
-void HM_set(HashMap * map, char * key, void* value) {
+void HM_set(HashMap * map, long key, long value) {
 
-	long long index = HM_HashCode(map, key);
-	HM_Pair * current = map->bucket_list[index];
+	long long index = HashCode(map, key);
+	Pair * current = map->bucket_list[index];
 
 	while (current) {
-		if (!strcmp(current->key, key)) {
+		if (current->key == key) {
 			current->value = value;
 			return;
 		}
 		current = current->next;
-	}
+	}	
+	
 
-    HM_Pair * p = malloc(sizeof(HM_Pair));
+    Pair * p = malloc(sizeof(Pair));
     p->key = key;
     p->value = value;
     p->next = map->bucket_list[index];
@@ -93,14 +81,14 @@ void HM_set(HashMap * map, char * key, void* value) {
     map->total++;
 }
 
-void * HM_remove(HashMap * map, const char * key) {
+long long HM_remove(HashMap * map, long key) {
 	
-	long long index = HM_HashCode(map, key);
-	HM_Pair * current = map->bucket_list[index], * temp;
+	long long index = HashCode(map, key);
+	Pair * current = map->bucket_list[index], * temp;
 	size_t depth = 0;
 
 	while (current) {
-		if (!strcmp(current->key, key))
+		if (current->key == key)
 			break;
 		++depth;
 		current = current->next;
@@ -124,22 +112,21 @@ void * HM_remove(HashMap * map, const char * key) {
 	--map->total;
 
 
-	void * value = current->value;
+	long value = current->value;
 	
-	free(current->key);
 	free(current);
 	
 	return value;
 }
 
 void HM_print(HashMap * map) {
-	HM_Pair * bucket, * current;
+	Pair * bucket, * current;
 	println("[Buckets: {lu}, Total: {lu}]:", map->buckets, map->total);
 	for (int i = 0; i < map->capacity; ++i) {
 		bucket = map->bucket_list[i];
 		current = bucket;
 		while (current) {
-			println("\t{s}: {Li}", current->key, current->value);
+			println("\t{li}: {Li}", current->key, current->value);
 			current = current->next;
 		}
 	}
@@ -147,13 +134,12 @@ void HM_print(HashMap * map) {
 
 void HM_free(HashMap * map) {
 	
-	HM_Pair * current, * next;
+	Pair * current, * next;
 
 	for (int i = 0; i < map->capacity; ++i) {
 		current = map->bucket_list[i];
 		while (current) {
 			next = current->next;
-			free(current->key);
 			free(current);
 			current = next;
 		}

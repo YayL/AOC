@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "fmt.c"
 
 struct Vector {
 	long * items;
@@ -82,4 +83,12 @@ struct Vector * vector_copy(struct Vector * src) {
 	memcpy(dest->items, src->items, src->size * src->item_size);
 	
 	return dest;
+}
+
+void vector_print(struct Vector * vec) {
+
+	for (int i = 0; i < vec->size; ++i) {
+		println("{i}: {li}", i, vec->items[i]);
+	}
+
 }
