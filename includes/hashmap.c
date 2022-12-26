@@ -34,10 +34,10 @@ long HM_HashCode(HashMap * map, const char * key) {
 	const int m = (2 << 24) - 1;
 	
 	long long hash_value = 0;
-	long long p_pow = 1;
+	long long p_pow = 31;
 
 	for (int i = 0; key[i]; ++i) {
-		hash_value += (hash_value + (key[i] - ' ' + 1) * p_pow) & m;
+		hash_value = (((hash_value + (key[i] - ' ' + 1)) * p_pow) & m);
 		p_pow = (p_pow * p) & m;
 	}
 	
@@ -142,6 +142,21 @@ void HM_print(HashMap * map) {
 			println("\t{s}: {Li}", current->key, current->value);
 			current = current->next;
 		}
+	}
+}
+
+void HM_clear (HashMap * map) {
+
+	HM_Pair * current, * next;
+	for (int i = 0; i < map->capacity; ++i) {
+		current = map->bucket_list[i];
+		while (current) {
+			next = current->next;
+			free(current->key);
+			free(current);
+			current = next;
+		}
+		map->bucket_list[i] = NULL;
 	}
 }
 

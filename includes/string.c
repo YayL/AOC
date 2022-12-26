@@ -42,6 +42,16 @@ void string_concat(String * dest, String * src) {
 	dest->c_str = temp_str;
 }
 
+void string_append (String * dest, char c) {
+	++dest->length;
+
+	char * temp_str = realloc((void *)dest->c_str, (dest->length + 1) * sizeof(char));
+	temp_str[dest->length - 1] = c;
+	temp_str[dest->length] = 0;
+	
+	dest->c_str = temp_str;
+}
+
 void print_string(String * string) {
 	println("{s}", string->c_str);
 }

@@ -128,6 +128,22 @@ void set_print(Set * set) {
 	}
 }
 
+void set_clear (Set * set) {
+
+	Pair * current, * next;
+	for (int i = 0; i < set->capacity; ++i) {
+		current = set->bucket_list[i];
+		while (current) {
+			next = current->next;
+			free(current->key);
+			free(current);
+			current = next;
+			--set->total;
+		}
+		set->bucket_list[i] = NULL;
+	}
+}
+
 void set_free(Set * set) {
 	
 	Pair * current, * next;

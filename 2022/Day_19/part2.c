@@ -17,6 +17,8 @@ typedef struct round {
 	char could_buy[4];
 } Round;
 
+#define MINUTES 32
+
 int can_buy(Blueprint * bp, Round * round, int index) {
 	if (round->could_buy[index])
 		return 0;
@@ -24,11 +26,11 @@ int can_buy(Blueprint * bp, Round * round, int index) {
 			 bp->costs[index][1] < round->robots[1] &&
 			 bp->costs[index][2] < round->robots[2])
 		return 0;
-	else if (bp->costs[index][0] > round->ores[0] - round->robots[0])
+	else if (round->ores[0] - bp->costs[index][0] < round->robots[0])
 		return 0;
-	else if (bp->costs[index][1] > round->ores[1] - round->robots[1])
+	else if (round->ores[1] - bp->costs[index][1] < round->robots[1])
 		return 0;
-	else if (bp->costs[index][2] > round->ores[2] - round->robots[2])
+	else if (round->ores[2] - bp->costs[index][2] < round->robots[2])
 		return 0;
 	return 1;
 }
@@ -54,13 +56,14 @@ int get_quality(char * input) {
 		round->ores[1] += round->robots[1];
 		round->ores[2] += round->robots[2];
 		round->ores[3] += round->robots[3];
-		if (round->minutes == 32) {
+
+		if (round->minutes == MINUTES) {
 			if (max < round->ores[3])
 				max = round->ores[3];
 			free(round);
 			continue;
 		}
-		list_push(list, round);
+		
 		if (can_buy(&bp, round, 0)) {
 			temp = malloc(sizeof(Round));
 			memcpy(temp, round, sizeof(Round));
@@ -70,6 +73,7 @@ int get_quality(char * input) {
 			list_push(list, temp);
 			round->could_buy[0] = 1;
 		}
+		
 		if (can_buy(&bp, round, 1)) {
 			temp = malloc(sizeof(Round));
 			memcpy(temp, round, sizeof(Round));
@@ -79,6 +83,7 @@ int get_quality(char * input) {
 			list_push(list, temp);
 			round->could_buy[1] = 1;
 		}
+		
 		if (can_buy(&bp, round, 2)) {
 			temp = malloc(sizeof(Round));
 			memcpy(temp, round, sizeof(Round));
@@ -89,6 +94,7 @@ int get_quality(char * input) {
 			list_push(list, temp);
 			round->could_buy[2] = 1;
 		}
+		
 		if (can_buy(&bp, round, 3)) {
 			temp = malloc(sizeof(Round));
 			memcpy(temp, round, sizeof(Round));
@@ -99,6 +105,9 @@ int get_quality(char * input) {
 			list_push(list, temp);
 			round->could_buy[3] = 1;
 		}
+		
+		if (round->minutes < MINUTES - 2)
+			list_push(list, round);
 	}
 	
 	return max;

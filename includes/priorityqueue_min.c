@@ -85,7 +85,6 @@ void MinH_insert(struct MinHeap * heap, struct MH_Node * value) {
 	heap->list[curr] = value;
 
 	while (curr > 0 && (temp = heap->list[MH_parent(curr)])->compare > heap->list[curr]->compare) {
-		println("{i}", curr);
 		heap->list[MH_parent(curr)] = heap->list[curr];
 		heap->list[curr] = temp;
 		curr = MH_parent(curr);

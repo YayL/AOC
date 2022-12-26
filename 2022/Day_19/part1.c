@@ -17,7 +17,7 @@ typedef struct round {
 	char could_buy[4];
 } Round;
 
-// if i produce more than the ingrediants of a robot do not buy it
+#define MINUTES 24
 
 int can_buy(Blueprint * bp, Round * round, int index) {
 	if (round->could_buy[index])
@@ -26,11 +26,11 @@ int can_buy(Blueprint * bp, Round * round, int index) {
 			 bp->costs[index][1] < round->robots[1] &&
 			 bp->costs[index][2] < round->robots[2])
 		return 0;
-	else if (bp->costs[index][0] > round->ores[0] - round->robots[0])
+	else if (round->ores[0] - bp->costs[index][0] < round->robots[0])
 		return 0;
-	else if (bp->costs[index][1] > round->ores[1] - round->robots[1])
+	else if (round->ores[1] - bp->costs[index][1] < round->robots[1])
 		return 0;
-	else if (bp->costs[index][2] > round->ores[2] - round->robots[2])
+	else if (round->ores[2] - bp->costs[index][2] < round->robots[2])
 		return 0;
 	return 1;
 }
@@ -56,7 +56,7 @@ int get_quality(char * input) {
 		round->ores[1] += round->robots[1];
 		round->ores[2] += round->robots[2];
 		round->ores[3] += round->robots[3];
-		if (round->minutes == 24) {
+		if (round->minutes == MINUTES) {
 			if (max < round->ores[3])
 				max = round->ores[3];
 			free(round);
@@ -100,7 +100,8 @@ int get_quality(char * input) {
 			list_push(list, temp);
 			round->could_buy[3] = 1;
 		}
-		list_push(list, round);
+		if (round->minutes < MINUTES - 2)
+			list_push(list, round);
 	}
 	
 	return max * bp.id;
