@@ -2,38 +2,38 @@
 #include "fmt.c"
 #include "string.c"
 
-typedef struct pair {
+typedef struct HM_pair_int {
 	long key;
 	long value;
-	struct pair * next;
-} Pair;
+	struct HM_pair_int * next;
+} HM_Pair_int;
 
-typedef struct hashmap {
-	Pair ** bucket_list;
+typedef struct hashmap_int {
+	HM_Pair_int ** bucket_list;
 	size_t capacity;
 	size_t buckets;
 	size_t total;
-} HashMap;
+} HashMap_int;
 
-HashMap * new_HashMap(size_t pow_capacity) {
+HashMap_int * new_HashMap_int(size_t pow_capacity) {
 
-	HashMap * map = malloc(sizeof(HashMap));
+	HashMap_int * map = malloc(sizeof(HashMap_int));
 	
 	map->capacity = (1 << pow_capacity) - 1;
 	map->buckets = 0;
 	map->total = 0;
 
-	map->bucket_list = calloc(map->capacity + 1, sizeof(Pair *));
+	map->bucket_list = calloc(map->capacity + 1, sizeof(HM_Pair_int *));
 
 	return map;
 }
 
-long HashCode(HashMap * map, long key) {
+long HashCode_int(HashMap_int * map, long key) {
 	return key & map->capacity;
 }
 
-long * HM_get(HashMap * map, long key) {
-	Pair * current = map->bucket_list[HashCode(map, key)];
+long * HM_int_get(HashMap_int * map, long key) {
+	HM_Pair_int * current = map->bucket_list[HashCode_int(map, key)];
 
 	while (current) {
 		if (current->key == key)
@@ -41,12 +41,12 @@ long * HM_get(HashMap * map, long key) {
 		current = current->next;
 	}
 
-	println("[HashMap]: Key '{li}' was not found", key);
+	println("[HashMap_int]: Key '{li}' was not found", key);
 	exit(1);
 }
 
-long HM_has(HashMap * map, long key) {
-	Pair * current = map->bucket_list[HashCode(map, key)];
+long HM_int_has(HashMap_int * map, long key) {
+	HM_Pair_int * current = map->bucket_list[HashCode_int(map, key)];
 
 	while (current) {
 		if (current->key == key)
@@ -57,10 +57,10 @@ long HM_has(HashMap * map, long key) {
 	return 0;
 }
 
-void HM_set(HashMap * map, long key, long value) {
+void HM_int_set(HashMap_int * map, long key, long value) {
 
-	long long index = HashCode(map, key);
-	Pair * current = map->bucket_list[index];
+	long long index = HashCode_int(map, key);
+	HM_Pair_int * current = map->bucket_list[index];
 
 	while (current) {
 		if (current->key == key) {
@@ -71,7 +71,7 @@ void HM_set(HashMap * map, long key, long value) {
 	}	
 	
 
-    Pair * p = malloc(sizeof(Pair));
+    HM_Pair_int * p = malloc(sizeof(HM_Pair_int));
     p->key = key;
     p->value = value;
     p->next = map->bucket_list[index];
@@ -81,10 +81,10 @@ void HM_set(HashMap * map, long key, long value) {
     map->total++;
 }
 
-long long HM_remove(HashMap * map, long key) {
+long long HM_int_remove(HashMap_int * map, long key) {
 	
-	long long index = HashCode(map, key);
-	Pair * current = map->bucket_list[index], * temp;
+	long long index = HashCode_int(map, key);
+	HM_Pair_int * current = map->bucket_list[index], * temp;
 	size_t depth = 0;
 
 	while (current) {
@@ -95,7 +95,7 @@ long long HM_remove(HashMap * map, long key) {
 	}
 	
 	if (current == NULL) {
-		println("[HashMap]: Key '{s}' was not found", key);
+		println("[HashMap_int]: Key '{s}' was not found", key);
 		exit(1);
 	}
 
@@ -119,8 +119,8 @@ long long HM_remove(HashMap * map, long key) {
 	return value;
 }
 
-void HM_print(HashMap * map) {
-	Pair * bucket, * current;
+void HM_int_print(HashMap_int * map) {
+	HM_Pair_int * bucket, * current;
 	println("[Buckets: {lu}, Total: {lu}]:", map->buckets, map->total);
 	for (int i = 0; i < map->capacity; ++i) {
 		bucket = map->bucket_list[i];
@@ -132,9 +132,9 @@ void HM_print(HashMap * map) {
 	}
 }
 
-void HM_free(HashMap * map) {
+void HM_int_free(HashMap_int * map) {
 	
-	Pair * current, * next;
+	HM_Pair_int * current, * next;
 
 	for (int i = 0; i < map->capacity; ++i) {
 		current = map->bucket_list[i];

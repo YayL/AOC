@@ -131,7 +131,7 @@ void * deque_index (Deque * deque, size_t index) {
 
     int offset = deque->end - deque->start;
     index = (offset + index) % offset;
-    int new_index = (((offset + index) % (offset)) + deque->start) % deque->capacity;
+    int new_index = (((offset + index) % (offset)) + deque->start) & (deque->capacity - 1);
     return deque->items[new_index];
 }
 
