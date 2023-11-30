@@ -1,16 +1,4 @@
-#pragma once
-#include <stdlib.h>
-#include <string.h>
-#include "fmt.c"
-
-typedef struct deque {
-	void** items;
-	int start;
-	int end;
-	int size;
-	size_t capacity;
-	size_t item_size;
-} Deque;
+#include "deque.h"
 
 Deque * init_deque (size_t item_size) {
 

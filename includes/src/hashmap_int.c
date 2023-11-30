@@ -1,19 +1,4 @@
-#pragma once
-#include "fmt.c"
-#include "string.c"
-
-typedef struct HM_pair_int {
-	long key;
-	long value;
-	struct HM_pair_int * next;
-} HM_Pair_int;
-
-typedef struct hashmap_int {
-	HM_Pair_int ** bucket_list;
-	size_t capacity;
-	size_t buckets;
-	size_t total;
-} HashMap_int;
+#include "hashmap_int.h"
 
 HashMap_int * new_HashMap_int(size_t pow_capacity) {
 

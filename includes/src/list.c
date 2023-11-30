@@ -1,14 +1,4 @@
-#pragma once
-#include <stdlib.h>
-#include <string.h>
-#include "fmt.c"
-
-struct List {
-	void** items;
-	size_t size;
-	size_t capacity;
-	size_t item_size;
-};
+#include "list.h"
 
 struct List * init_list(size_t item_size) {
 

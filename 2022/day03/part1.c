@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../../includes/fmt.c"
-#include "../../includes/timer.c"
+#include "fmt.h"
+#include "timer.h"
 
 #define GET_INDEX(x) (((x) <= 'Z') ? ((x) - 'A' + 27) : ((x) - 'a' + 1))
 

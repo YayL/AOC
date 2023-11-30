@@ -1,13 +1,4 @@
-#pragma once
-#include <stdlib.h>
-#include <string.h>
-
-#include "fmt.c"
-
-typedef struct string {
-	char const * c_str;
-	size_t length;
-} String;
+#include "strings.h"
 
 String * new_string(const char * str) {
 

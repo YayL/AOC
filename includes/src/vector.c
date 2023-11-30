@@ -1,15 +1,4 @@
-#pragma once
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include "fmt.c"
-
-struct Vector {
-	long * items;
-	size_t size;
-	size_t capacity;
-	size_t item_size;
-};
+#include "vector.h"
 
 struct Vector * init_vector() {
 

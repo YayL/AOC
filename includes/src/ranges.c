@@ -1,15 +1,4 @@
-#pragma once
-
-#include <stdlib.h>
-#include <string.h>
-
-#include "fmt.c"
-
-typedef struct range {
-	long long start;
-	long long end;
-	struct range * next;
-} Range;
+#include "ranges.h"
 
 Range * new_range(long long start, long long end) {
 	Range * range = malloc(sizeof(Range));

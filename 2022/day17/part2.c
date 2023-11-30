@@ -126,7 +126,7 @@ int main() {
 			if (!memcmp(c_end->heights, c_start->heights, sizeof(c_start->heights))) {
 				if ((TOTAL_ROUNDS - c_start->i) % (c_end->i - c_start->i) == 0) {
 					cycle_start_index = c_start->i;
-					goto end;
+                    break;
 				}
 			}
 		}
@@ -134,7 +134,6 @@ int main() {
 		rock = (rock + 1) % BLOCK_COUNT;
 	}
 
-	end:
 	long cycle_length = c_end->i - cycle_start_index;
 	
 	long height1 = c_start->height;

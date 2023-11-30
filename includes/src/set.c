@@ -1,18 +1,4 @@
-#pragma once
-#include "fmt.c"
-#include "string.c"
-
-typedef struct pair {
-	char * key;
-	struct pair * next;
-} Pair;
-
-typedef struct set {
-	Pair ** bucket_list;
-	size_t capacity;
-	size_t buckets;
-	size_t total;
-} Set;
+#include "set.h"
 
 Set * new_set(size_t pow_capacity) {
 

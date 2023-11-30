@@ -1,0 +1,6 @@
+[submodule "c-compiler/submodule/String-Formatter"]
+	path = c-compiler/submodule/String-Formatter
+	url = https://github.com/YayL/String-Formatter
+[submodule "submodule/String-Formatter"]
+	path = submodule/String-Formatter
+	url = https://github.com/YayL/String-Formatter
