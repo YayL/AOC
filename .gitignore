@@ -12,5 +12,6 @@
 **/test.*
 **/input.txt
 
+!/README.md
 !/CMakeLists*
 !/run.sh
