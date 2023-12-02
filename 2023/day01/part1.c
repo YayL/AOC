@@ -21,7 +21,7 @@ int main() {
                 last = line[i] - '0';
             }
         }
-        println("{u} + {u}", sum, first * 10 + last);
+
         sum += first * 10 + last;
         first = 0;
     }
