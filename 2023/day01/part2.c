@@ -11,6 +11,7 @@ int main() {
 
     if (fp == NULL) {
         println("File not found");
+        exit(1);
     }
 
     char * line = NULL;
