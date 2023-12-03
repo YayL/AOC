@@ -28,8 +28,8 @@ void list_push(struct List * list, void* item) {
 	}
 
 	if(list->size > list->capacity){
-		list->items = realloc(list->items, list->size * list->item_size);
-		list->capacity = list->size;
+        list->capacity = list->size * 2;
+		list->items = realloc(list->items, list->capacity * list->item_size);
 	}
 
 	list->items[list->size - 1] = item;

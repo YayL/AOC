@@ -17,4 +17,8 @@ WD="$(pwd)"
 clear
 cd "../$1/day$(printf '%02d' $2)/"
 
-$WD/AOC
+if [ "$4" = "-d" ]; then
+    valgrind $WD/AOC
+else
+    $WD/AOC
+fi
