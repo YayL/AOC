@@ -1,7 +1,6 @@
 #include "common.h"
 #include "vector.h"
 #include "list.h"
-#include <ctype.h>
 
 struct Card {
     int count;
@@ -10,6 +9,7 @@ struct Card {
 
 int main() {
 
+    start_timer();
     FILE * fp = fopen("input.txt", "r");
 
     if (fp == NULL) {
@@ -73,6 +73,8 @@ int main() {
         sum += card->count;
     }
 
+    unsigned long time = stop_timer();
     println("Sum: {i}", sum);
+    printf("Execution time: %.3fms\n", (double)time / 1000);
 
 }

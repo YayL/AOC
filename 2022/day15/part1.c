@@ -1,11 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "common.h"
 
-#include "../../includes/fmt.c"
-#include "../../includes/timer.c"
-#include "../../includes/ranges.c"
-#include "../../includes/hashmap.c"
-#include "../../includes/list.c"
+#include "fmt.h"
+#include "timer.h"
+#include "ranges.h"
+#include "hashmap.h"
+#include "list.h"
 
 typedef struct beacon {
 	int x;
@@ -55,13 +54,13 @@ int main () {
 		sensor->dist = ABS(b_x - sensor->x) + ABS(b_y - sensor->y);
 		char * key = format("{i}-{i}", b_x, b_y);
 		if (HM_has(beacons, key)) {
-			beacon = (Beacon *)HM_get(beacons, key);
+			beacon = HM_get(beacons, key);
 		} else {
 			beacon = malloc(sizeof(Beacon));
 			beacon->x = b_x;
 			beacon->y = b_y;
 			beacon->is_checked = 0;
-			HM_set(beacons, key, (long) beacon);
+			HM_set(beacons, key, beacon);
 		}
 		sensor->beacon = beacon;
 		free(key);

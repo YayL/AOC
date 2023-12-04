@@ -1,18 +1,12 @@
 #include "timer.h"
 
-unsigned long millis()
-{
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
-    unsigned long ms =	SEC_TO_MS((unsigned long)ts.tv_sec) + 
-						NS_TO_MS((unsigned long)ts.tv_nsec);
-    return ms;
-}
+struct timeval t_start, t_stop;
 
-unsigned long micros() {
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
-    unsigned long us =	SEC_TO_US((unsigned long)ts.tv_sec) + 
-						NS_TO_US((unsigned long)ts.tv_nsec);
-    return us;
+void start_timer() {
+    gettimeofday(&t_start, (void *) 0);
+} 
+
+unsigned long stop_timer() {
+    gettimeofday(&t_stop, (void *) 0);
+    return SEC_TO_MS((t_stop.tv_sec - t_start.tv_sec)) + (t_stop.tv_usec - t_start.tv_usec);
 }

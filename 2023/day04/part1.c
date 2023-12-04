@@ -1,9 +1,9 @@
 #include "common.h"
 #include "vector.h"
-#include <ctype.h>
 
 int main() {
 
+	start_timer();
     FILE * fp = fopen("input.txt", "r");
 
     if (fp == NULL) {
@@ -49,6 +49,8 @@ int main() {
 
     }
 
+    unsigned long time = stop_timer();
     println("Sum: {i}", sum);
+    printf("Execution time: %.3fms\n", (double)time / 1000);
 
 }
