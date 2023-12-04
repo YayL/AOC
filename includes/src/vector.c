@@ -74,6 +74,20 @@ struct Vector * vector_copy(struct Vector * src) {
 	return dest;
 }
 
+void vector_clear(struct Vector * vector) {
+    vector->size = 0;
+}
+
+char vector_contains(struct Vector * src, long number) {
+    for (int i = 0; i < src->size; ++i) {
+        if (src->items[i] == number) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 void vector_print(struct Vector * vec) {
 
 	for (int i = 0; i < vec->size; ++i) {

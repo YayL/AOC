@@ -58,6 +58,7 @@ int main() {
 
     int y = 0;
 
+    // initial parsing
     while ((read = getline(&line, &length, fp)) != -1) {
         line_length = read - 1;
         char * line_copy = malloc(sizeof(char) * read);
@@ -94,6 +95,7 @@ int main() {
         y += 1;
     }
 
+    // check for gears and numbers
     int end_x, sum = 0;
     for (int i = 0; i < numbers->size; ++i) {
         number = list_at(numbers, i);
@@ -112,6 +114,7 @@ int main() {
         }
     } 
 
+    // loop over gear info
     for (int i = 0; i < gears->size; ++i) {
         struct Gear * gear = list_at(gears, i);
         

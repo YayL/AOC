@@ -24,4 +24,8 @@ void vector_reserve(struct Vector * vector, unsigned int size_to_reserve);
 
 struct Vector * vector_copy(struct Vector * src);
 
+char vector_contains(struct Vector * src, long number);
+
+void vector_clear(struct Vector * vector);
+
 void vector_print(struct Vector * vec);
