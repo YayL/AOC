@@ -14,7 +14,7 @@ set(CMAKE_C_FLAGS_RELEASE "-O3 -Wall")
 add_subdirectory("submodule/String-Formatter")
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/includes/src/*.c
-                                            ${CMAKE_CURRENT_SOURCE_DIR}/2023/day05/part2fast.c)
+                                            ${CMAKE_CURRENT_SOURCE_DIR}/2023/day06/part2.c)
 
 message(STATUS "SOURCES: ${SOURCES}")
 
@@ -27,4 +27,5 @@ target_include_directories(AOC PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/submodule/String-Formatter/include)
 
 # Link libraries
-target_link_libraries(AOC PRIVATE fmt)
+target_link_libraries(AOC PRIVATE   fmt
+                                    m)

@@ -27,4 +27,5 @@ target_include_directories(AOC PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/submodule/String-Formatter/include)
 
 # Link libraries
-target_link_libraries(AOC PRIVATE fmt)
+target_link_libraries(AOC PRIVATE   fmt
+                                    m)

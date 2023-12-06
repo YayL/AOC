@@ -7,6 +7,7 @@ typedef struct string {
 	size_t length;
 } String;
 
+String * new_string_len(const char * str, size_t length);
 String * new_string(const char * str);
 
 char string_at(String * src, size_t index);

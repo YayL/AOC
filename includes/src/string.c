@@ -1,18 +1,23 @@
 #include "strings.h"
+#include <string.h>
+
+String * new_string_len(const char * str, size_t length) {
+    String * new_str = malloc(sizeof(String));
+    new_str->length = length;
+
+    char * temp_str = malloc((new_str->length + 1) * sizeof(char));
+
+    memcpy(temp_str, str, new_str->length);
+    temp_str[new_str->length] = 0;
+    new_str->c_str = temp_str;
+
+    return new_str;
+}
 
 String * new_string(const char * str) {
-
-	String * new_str = malloc(sizeof(String));
-	new_str->length = strlen(str);
-	
-	char * temp_str = malloc((new_str->length + 1) * sizeof(char));
-
-	memcpy(temp_str, str, new_str->length);
-	temp_str[new_str->length] = 0;
-	new_str->c_str = temp_str;
-
-	return new_str;
+    return new_string_len(str, strlen(str));
 }
+
 
 char string_at(String * src, size_t index) {
 	if (index < src->length)
