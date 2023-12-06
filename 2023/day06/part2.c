@@ -47,11 +47,8 @@ int main() {
  
     Record record;
  
-    read = getline(&line, &length, fp);
-    record.time = get_number(line, read);
-
-    read = getline(&line, &length, fp);
-    record.distance = get_number(line, read);
+    record.time = get_number(line, getline(&line, &length, fp));
+    record.distance = get_number(line, getline(&line, &length, fp));
 
     double discriminant = sqrt(record.time * record.time - 4 * record.distance);
     double min = (record.time - discriminant) / 2;
