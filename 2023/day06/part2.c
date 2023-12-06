@@ -57,7 +57,7 @@ int main() {
     double min = (record.time - discriminant) / 2;
     double max = (record.time + discriminant) / 2;
 
-    size_t product = 1 + fix_max(max) - fix_min(min);
+    unsigned long long product = 1 + fix_max(max) - fix_min(min);
 
     printf("Execution time: %.3fms\n", (double)stop_timer() / 1000);
     println("Result: {lu}", product);

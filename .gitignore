@@ -13,5 +13,5 @@
 **/input.txt
 
 !/README.md
-!/CMakeLists*
+!/CMakeLists-Copy.txt
 !/run.sh
