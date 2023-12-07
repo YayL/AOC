@@ -93,40 +93,49 @@ void * list_copy(struct List * list) {
 	return copy;
 }
 
-void _list_sort(struct List * list, char (*f)(void *, void *), int first, int last) {
-    
-    long i, j, pivot;
-    void * temp;
+void list_sort(struct List * list, char (*f)(void *, void *)) {
+    void ** items = list->items, * value, * temp;
+    size_t l = 0, h = list->size - 1, i, stack[h - l + 1];
+    long top = -1;
+ 
+    stack[++top] = l;
+    stack[++top] = h;
 
-    if (first >= last)
-        return;
+    while (top >= 0) {
+        h = stack[top--];
+        l = stack[top--];
 
-    pivot = first, i = first, j = last;
+        // parition start
 
-    while (i < j) {
-        while (f(list->items[i], list->items[pivot]) && i < last) {
-            i += 1;
+        value = items[h];
+        i = l - 1;
+
+        for (size_t j = l; j <= h - 1; ++j) {
+            if (f(items[j], value)) {
+                i += 1;
+                temp = items[i];
+                items[i] = items[j];
+                items[j] = temp;
+            }
+        }
+
+        temp = items[i + 1];
+        items[i + 1] = items[h];
+        items[h] = temp;
+
+        // partition end
+
+        if (l < i) {
+            stack[++top] = l;
+            stack[++top] = i;
         }
         
-        while (!f(list->items[j], list->items[pivot]) && j > first) {
-            j -= 1;
+        i += 2;
+
+        if (i < h) {
+            stack[++top] = i;
+            stack[++top] = h;
         }
 
-        if (i < j) {
-            temp = list->items[i];
-            list->items[i] = list->items[j];
-            list->items[j] = temp;
-        }
     }
-
-    temp = list->items[pivot];
-    list->items[pivot] = list->items[j];
-    list->items[j] = temp;
-
-    _list_sort(list, f, first, j - 1);
-    _list_sort(list, f, j + 1, last);
-}
-
-void list_sort(struct List * list, char (*f)(void *, void *)) {
-    _list_sort(list, f, 0, list->size - 1);
 }

@@ -96,39 +96,49 @@ void vector_print(struct Vector * vec) {
 
 }
 
-void _vector_sort(struct Vector * vec, int first, int last) {
-    
-    long i, j, pivot, temp;
+void vector_sort(struct Vector * vec) {
+    long * items = vec->items, value, temp;
+    size_t l = 0, h = vec->size - 1, i, stack[h - l + 1];
+    long top = -1;
+ 
+    stack[++top] = l;
+    stack[++top] = h;
 
-    if (first >= last)
-        return;
+    while (top >= 0) {
+        h = stack[top--];
+        l = stack[top--];
 
-    pivot = first, i = first, j = last;
+        // parition start
 
-    while (i < j) {
-        while (vec->items[i] <= vec->items[pivot] && i < last) {
-            i += 1;
+        value = items[h];
+        i = l - 1;
+
+        for (size_t j = l; j <= h - 1; ++j) {
+            if (items[j] <= value) {
+                i += 1;
+                temp = items[i];
+                items[i] = items[j];
+                items[j] = temp;
+            }
+        }
+
+        temp = items[i + 1];
+        items[i + 1] = items[h];
+        items[h] = temp;
+
+        // partition end
+
+        if (l < i) {
+            stack[++top] = l;
+            stack[++top] = i;
         }
         
-        while (vec->items[j] > vec->items[pivot]) {
-            j -= 1;
+        i += 2;
+
+        if (i < h) {
+            stack[++top] = i;
+            stack[++top] = h;
         }
 
-        if (i < j) {
-            temp = vec->items[i];
-            vec->items[i] = vec->items[j];
-            vec->items[j] = temp;
-        }
     }
-
-    temp = vec->items[pivot];
-    vec->items[pivot] = vec->items[j];
-    vec->items[j] = temp;
-
-    _vector_sort(vec, first, j - 1);
-    _vector_sort(vec, j + 1, last);
-}
-
-void vector_sort(struct Vector * vec) {
-    _vector_sort(vec, 0, vec->size - 1);
 }

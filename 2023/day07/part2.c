@@ -1,5 +1,4 @@
 #include "common.h"
-#include "vector.h"
 #include "list.h"
 
 typedef struct Hand {
