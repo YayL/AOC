@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -e
 
 dir="$1\/day$(printf '%02d' $2)"

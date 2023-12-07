@@ -17,17 +17,16 @@ void free_vector(struct Vector * vector) {
 }
 
 void vector_push(struct Vector * vector, long item) {
-	if (!vector->size++) { // Incrementing here as it is just easier and not wasting a line for it
-		vector->items = calloc(1, vector->item_size);
+	if (!vector->capacity) { // Incrementing here as it is just easier and not wasting a line for it
+		vector->items = malloc(vector->item_size);
 		vector->capacity = 1;
+	} else if(vector->capacity < vector->size) {
+        puts("1");
+        vector->capacity = vector->size * 2;
+		vector->items = realloc(vector->items, vector->capacity * vector->item_size);
 	}
 
-	if(vector->size > vector->capacity){
-		vector->items = realloc(vector->items, vector->size * vector->item_size);
-		vector->capacity = vector->size;
-	}
-
-	vector->items[vector->size - 1] = item;
+	vector->items[vector->size++] = item;
 }
 
 long vector_pop(struct Vector * vector) {
@@ -55,7 +54,7 @@ long vector_at(struct Vector * vector, size_t index) {
 	exit(1);
 }
 
-void vector_reserve(struct Vector * vector, unsigned int size_to_reserve) {
+void vector_reserve(struct Vector * vector, size_t size_to_reserve) {
 	vector->capacity += size_to_reserve;
 	vector->items = realloc(vector->items, vector->capacity * vector->item_size);
 }
@@ -89,56 +88,52 @@ char vector_contains(struct Vector * src, long number) {
 }
 
 void vector_print(struct Vector * vec) {
-
 	for (int i = 0; i < vec->size; ++i) {
 		println("{i}: {li}", i, vec->items[i]);
 	}
-
 }
 
 void vector_sort(struct Vector * vec) {
-    long * items = vec->items, value, temp;
-    size_t l = 0, h = vec->size - 1, i, stack[h - l + 1];
-    long top = -1;
+    long low = 0, high = vec->size - 1, value, temp, pivot, top = -1;
+    long * items = vec->items, stack[(int)log2(high - low) * 5];
  
-    stack[++top] = l;
-    stack[++top] = h;
+    stack[++top] = low;
+    stack[++top] = high;
 
-    while (top >= 0) {
-        h = stack[top--];
-        l = stack[top--];
+    while (top > 0) {
+        high = stack[top--];
+        low = stack[top--];
 
         // parition start
 
-        value = items[h];
-        i = l - 1;
+        value = items[high];
+        pivot = low - 1;
 
-        for (size_t j = l; j <= h - 1; ++j) {
+        for (size_t j = low; j < high; ++j) {
             if (items[j] <= value) {
-                i += 1;
-                temp = items[i];
-                items[i] = items[j];
+                pivot += 1;
+                temp = items[pivot];
+                items[pivot] = items[j];
                 items[j] = temp;
             }
         }
 
-        temp = items[i + 1];
-        items[i + 1] = items[h];
-        items[h] = temp;
+        pivot += 1;
+        temp = items[pivot];
+        items[pivot] = items[high];
+        items[high] = temp;
 
         // partition end
 
-        if (l < i) {
-            stack[++top] = l;
-            stack[++top] = i;
+        if (low < pivot - 1) {
+            stack[++top] = low;
+            stack[++top] = pivot - 1;
         }
         
-        i += 2;
 
-        if (i < h) {
-            stack[++top] = i;
-            stack[++top] = h;
+        if (pivot + 1 < high) {
+            stack[++top] = pivot + 1;
+            stack[++top] = high;
         }
-
     }
 }

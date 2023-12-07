@@ -2,10 +2,11 @@
 
 struct List * init_list(size_t item_size) {
 
-	struct List * list = calloc(1, sizeof(struct List));
+	struct List * list = malloc(sizeof(struct List));
 	list->size = 0;
 	list->capacity = 0;
 	list->item_size = item_size;
+    list->items = NULL;
 	
 	return list;
 }
@@ -23,7 +24,7 @@ void free_list(struct List * list) {
 
 void list_push(struct List * list, void* item) {
 	if (!list->size++) { // Incrementing here as it is just easier and not wasting a line for it
-		list->items = calloc(1, list->item_size);
+		list->items = malloc(list->item_size);
 		list->capacity = 1;
 	}
 
@@ -93,49 +94,48 @@ void * list_copy(struct List * list) {
 	return copy;
 }
 
-void list_sort(struct List * list, char (*f)(void *, void *)) {
+void list_sort(struct List * list, int (*f)(const void *, const void *)) {
     void ** items = list->items, * value, * temp;
-    size_t l = 0, h = list->size - 1, i, stack[h - l + 1];
-    long top = -1;
+    long low = 0, high = list->size - 1, pivot, top = -1;
+    long stack[(int)log2(high - low) * 5];
  
-    stack[++top] = l;
-    stack[++top] = h;
+    stack[++top] = low;
+    stack[++top] = high;
 
-    while (top >= 0) {
-        h = stack[top--];
-        l = stack[top--];
+    while (top > 0) {
+        high = stack[top--];
+        low = stack[top--];
 
         // parition start
 
-        value = items[h];
-        i = l - 1;
+        value = items[high];
+        pivot = low - 1;
 
-        for (size_t j = l; j <= h - 1; ++j) {
+        for (size_t j = low; j < high; ++j) {
             if (f(items[j], value)) {
-                i += 1;
-                temp = items[i];
-                items[i] = items[j];
+                pivot += 1;
+                temp = items[pivot];
+                items[pivot] = items[j];
                 items[j] = temp;
             }
         }
 
-        temp = items[i + 1];
-        items[i + 1] = items[h];
-        items[h] = temp;
+        pivot += 1;
+        temp = items[pivot];
+        items[pivot] = items[high];
+        items[high] = temp;
 
         // partition end
 
-        if (l < i) {
-            stack[++top] = l;
-            stack[++top] = i;
+        if (low < pivot - 1) {
+            stack[++top] = low;
+            stack[++top] = pivot - 1;
         }
         
-        i += 2;
 
-        if (i < h) {
-            stack[++top] = i;
-            stack[++top] = h;
+        if (pivot + 1 < high) {
+            stack[++top] = pivot + 1;
+            stack[++top] = high;
         }
-
     }
 }

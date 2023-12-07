@@ -27,4 +27,4 @@ char list_contains (struct List * list, void * item);
 
 void * list_copy(struct List * list);
 
-void list_sort(struct List * list, char (*is_less_or_equal_to)(void *, void *));
+void list_sort(struct List * list, int (*is_less_or_equal_to)(const void *, const void *));

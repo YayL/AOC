@@ -20,7 +20,7 @@ void vector_shrink(struct Vector * vector, unsigned int new_size);
 
 long vector_at(struct Vector * vector, size_t index);
 
-void vector_reserve(struct Vector * vector, unsigned int size_to_reserve);
+void vector_reserve(struct Vector * vector, size_t size_to_reserve);
 
 struct Vector * vector_copy(struct Vector * src);
 

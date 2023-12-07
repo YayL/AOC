@@ -1,5 +1,6 @@
 #include "common.h"
 #include "list.h"
+#include "timer.h"
 
 typedef struct Hand {
     int cards[5];
@@ -91,8 +92,8 @@ int get_type_of_hand(Hand * hand) {
     exit(1);
 }
 
-char compare_hands(void * first, void * second) {
-    Hand * hand1 = first, * hand2 = second;
+int compare_hands(const void * first, const void * second) {
+    const Hand * hand1 = first, * hand2 = second;
 
     if (hand1->type != hand2->type)
         return hand1->type < hand2->type;
