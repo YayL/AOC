@@ -2,12 +2,18 @@
 #include "vector.h"
 #include "list.h"
 
-#include <time.h>
-
 typedef struct Hand {
     int cards[5];
     int bid;
-    char type;
+    enum {
+        HighCard=1,
+        OnePair,
+        TwoPair,
+        ThreeOfAKind,
+        FullHouse,
+        FourOfAKind,
+        FiveOfAKind
+    } type;
 } Hand;
 
 void print_hand(Hand * hand) {
@@ -54,28 +60,28 @@ int get_type_of_hand(Hand * hand) {
      
     switch (diff) {
         case 5:
-            return 1;
+            return HighCard;
         case 4:
-            return 2;
+            return OnePair;
         case 3:
             if (max != 3) {
-                return 3;
+                return TwoPair;
             }
-            return 4;
+            return ThreeOfAKind;
         case 2:
             if (max != 4) {
-                return 5;
+                return FullHouse;
             }
-            return 6;
+            return FourOfAKind;
         case 1:
-            return 7;
+            return FiveOfAKind;
     }
 
     println("Uhoh unknown type of card? Diff: {i}, Max: {i}", diff, max);
     exit(1);
 }
 
-char is_less_equal_to(void * first, void * second) {
+char compare_hands(void * first, void * second) {
     Hand * hand1 = first, * hand2 = second;
 
     if (hand1->type != hand2->type)
@@ -115,7 +121,7 @@ int main() {
         list_push(hands, hand);
     }
 
-    list_sort(hands, &is_less_equal_to); 
+    list_sort(hands, &compare_hands); 
 
     long sum = 0;
 
