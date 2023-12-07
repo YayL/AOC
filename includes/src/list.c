@@ -92,3 +92,41 @@ void * list_copy(struct List * list) {
 
 	return copy;
 }
+
+void _list_sort(struct List * list, char (*f)(void *, void *), int first, int last) {
+    
+    long i, j, pivot;
+    void * temp;
+
+    if (first >= last)
+        return;
+
+    pivot = first, i = first, j = last;
+
+    while (i < j) {
+        while (f(list->items[i], list->items[pivot]) && i < last) {
+            i += 1;
+        }
+        
+        while (!f(list->items[j], list->items[pivot]) && j > first) {
+            j -= 1;
+        }
+
+        if (i < j) {
+            temp = list->items[i];
+            list->items[i] = list->items[j];
+            list->items[j] = temp;
+        }
+    }
+
+    temp = list->items[pivot];
+    list->items[pivot] = list->items[j];
+    list->items[j] = temp;
+
+    _list_sort(list, f, first, j - 1);
+    _list_sort(list, f, j + 1, last);
+}
+
+void list_sort(struct List * list, char (*f)(void *, void *)) {
+    _list_sort(list, f, 0, list->size - 1);
+}

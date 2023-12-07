@@ -29,3 +29,5 @@ char vector_contains(struct Vector * src, long number);
 void vector_clear(struct Vector * vector);
 
 void vector_print(struct Vector * vec);
+
+void vector_sort(struct Vector * vec);

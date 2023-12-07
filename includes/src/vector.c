@@ -95,3 +95,40 @@ void vector_print(struct Vector * vec) {
 	}
 
 }
+
+void _vector_sort(struct Vector * vec, int first, int last) {
+    
+    long i, j, pivot, temp;
+
+    if (first >= last)
+        return;
+
+    pivot = first, i = first, j = last;
+
+    while (i < j) {
+        while (vec->items[i] <= vec->items[pivot] && i < last) {
+            i += 1;
+        }
+        
+        while (vec->items[j] > vec->items[pivot]) {
+            j -= 1;
+        }
+
+        if (i < j) {
+            temp = vec->items[i];
+            vec->items[i] = vec->items[j];
+            vec->items[j] = temp;
+        }
+    }
+
+    temp = vec->items[pivot];
+    vec->items[pivot] = vec->items[j];
+    vec->items[j] = temp;
+
+    _vector_sort(vec, first, j - 1);
+    _vector_sort(vec, j + 1, last);
+}
+
+void vector_sort(struct Vector * vec) {
+    _vector_sort(vec, 0, vec->size - 1);
+}

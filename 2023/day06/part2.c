@@ -43,7 +43,7 @@ int main() {
     }
 
     char * line = NULL;
-    size_t length = 0, read;
+    size_t length = 0;
  
     Record record;
  

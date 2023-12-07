@@ -26,3 +26,5 @@ void list_reserve(struct List * list, unsigned int additions);
 char list_contains (struct List * list, void * item);
 
 void * list_copy(struct List * list);
+
+void list_sort(struct List * list, char (*is_less_or_equal_to)(void *, void *));
