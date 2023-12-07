@@ -1,12 +1,11 @@
 #include "common.h"
-#include "vector.h"
 #include "list.h"
 
 typedef struct Hand {
     int cards[5];
     int bid;
     enum {
-        HighCard=1,
+        HighCard,
         OnePair,
         TwoPair,
         ThreeOfAKind,
@@ -41,8 +40,10 @@ int card_to_numeric(char card) {
 }
 
 int get_type_of_hand(Hand * hand) {
-    int cards[13] = {0};
-    int amount[5] = {0};
+    int cards[13] = {0}; // Store the first occurance of the card in hand
+    int amount[5] = {0}; /* Store the amount of times a card is seen. 
+                            The correspondant card to an amount is found 
+                            in the cards array above */
     
     int index, diff = 0, max = 1;
 
@@ -57,23 +58,21 @@ int get_type_of_hand(Hand * hand) {
             cards[hand->cards[i] - 2] = ++diff;
         }
     }
-     
-    switch (diff) {
-        case 5:
-            return HighCard;
+ 
+    switch (diff - max) {
         case 4:
-            return OnePair;
-        case 3:
-            if (max != 3) {
-                return TwoPair;
-            }
-            return ThreeOfAKind;
+            return HighCard;
         case 2:
-            if (max != 4) {
-                return FullHouse;
-            }
-            return FourOfAKind;
+            return OnePair;
         case 1:
+            return TwoPair;
+        case 0:
+            return ThreeOfAKind;
+        case -1:
+            return FullHouse;
+        case -2:
+            return FourOfAKind;
+        case -4:
             return FiveOfAKind;
     }
 
@@ -96,7 +95,6 @@ int compare_hands(const void * first, const void * second) {
 }
 
 int main() {
-
     start_timer();
     FILE * fp = fopen("input.txt", "r");
 
@@ -106,7 +104,7 @@ int main() {
     }
 
     char * line = NULL;
-    size_t length = 0, read; 
+    size_t length = 0, read, sum = 0;
 
     struct List * hands = init_list(sizeof(Hand *));
     Hand * hand;
@@ -122,8 +120,6 @@ int main() {
     }
 
     list_sort(hands, &compare_hands); 
-
-    long sum = 0;
 
     for (int rank = 0; rank < hands->size; ++rank) {
         sum += ((Hand *) hands->items[rank])->bid * (rank + 1);
