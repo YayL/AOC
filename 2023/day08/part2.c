@@ -2,7 +2,11 @@
 
 #include "hashmap.h"
 #include "list.h"
+#include "timer.h"
 #include "vector.h"
+
+#define PARSE_NODE_NAME(dest, src, offset) memcpy(dest, src + offset, 3); dest[3] = 0
+#define ENCODE(name) (((long) (name[0] - 'A') & 0b11111) << 12) | (((long) (name[1] - 'A') & 0b11111) << 6) | (((long) (name[2] - 'A') & 0b11111))
 
 typedef struct MapNode {
     struct MapNode * left, * right;
@@ -19,7 +23,6 @@ unsigned long long gcd(unsigned long long a, unsigned long long int b)
 unsigned long long lcm(unsigned long long a, unsigned long long b) { return (a / gcd(a, b)) * b; } 
 
 int main() {
-
     start_timer();
     FILE * fp = fopen("input.txt", "r");
 
@@ -27,93 +30,84 @@ int main() {
         println("File not found");
         exit(1);
     }
-    
+
     unsigned long long result = 0;
-    char * line = NULL;
-    size_t length = 0, read;
+    char * line = NULL, * instructions;
+    size_t length = 0, read, instruction_length;
 
     MapNode * node, * temp;
-    HashMap * hashmap = new_HashMap(16);
+    MapNode * storage[104026] = {0}; // ENC("ZZZ") + 1
     struct List * nodes = init_list(sizeof(MapNode *));
     char * name = NULL, * left = NULL, * right = NULL;
 
-    // Parse input
+    // Setup input
 
-    read = getline(&line, &length, fp);
-    String * instructions = new_string_len(line, read);
+    instruction_length = getline(&instructions, &length, fp) - 1;
     getline(&line, &length, fp); // skip empty line
 
     while((read = getline(&line, &length, fp)) != -1) {
-        name = calloc(4, sizeof(char)), left = calloc(4, sizeof(char)), right = calloc(4, sizeof(char));
-        sscanf(line, "%3c = (%3c, %3c)", name, left, right);
-        node = HM_get(hashmap, name);
+        name = malloc(4 * sizeof(char)), left = malloc(4 * sizeof(char)), right = malloc(4 * sizeof(char));
+        PARSE_NODE_NAME(name, line, 0);
+        PARSE_NODE_NAME(left, line, 7);
+        PARSE_NODE_NAME(right, line, 12);
+
+        node = storage[ENCODE(name)];
         if (node == NULL) {
             node = malloc(sizeof(MapNode));
             node->is_end = name[2] == 'Z';
+            storage[ENCODE(name)] = node;
         }
-        HM_set(hashmap, name, node);
         if (name[2] == 'A') {
             list_push(nodes, node);
         }
 
-        temp = HM_get(hashmap, left);
+        temp = storage[ENCODE(left)];
         if (temp == NULL) {
             temp = malloc(sizeof(MapNode));
             temp->is_end = left[2] == 'Z';
+            storage[ENCODE(left)] = temp;
         }
-        HM_set(hashmap, left, temp);
         node->left = temp;
 
-        temp = HM_get(hashmap, right);
+        temp = storage[ENCODE(right)];
         if (temp == NULL) {
             temp = malloc(sizeof(MapNode));
             temp->is_end = right[2] == 'Z';
+            storage[ENCODE(right)] = temp;
         }
-        HM_set(hashmap, right, temp);
         node->right = temp;
     }
- 
-    char c;
-    const char * inst = instructions->c_str;
-    length = instructions->length - 1;
 
-    size_t count = 0, finished = 0;
-
-    size_t path_lengths[nodes->size];
-
-    MapNode ** ref, * value;
+    size_t count = 0, path_lengths[nodes->size];
 
     // Find the path lengths for each start node
 
-    while (1) {
-        for (int i = 0; i < length; ++i) {
-            c = inst[i];
-            count += 1;
-            for (int j = 0; j < nodes->size; ++j) {
-                ref = &nodes->items[j], value = *ref;
-                if (value->is_end)
-                    continue;
+    for (int i = 0; i < nodes->size; ++i) { 
+        node = nodes->items[i];
 
-                switch (c) {
+        count = 0;
+        while (1) {
+            for (int j = 0; j < instruction_length; ++j) {
+                switch (instructions[j]) {
                     case 'L':
-                        *ref = value->left; break;
+                        node = node->left; break;
                     case 'R':
-                        *ref = value->right; break;
+                        node = node->right; break;
                     default:
-                        println("Unknown instruction char: '{c}'", inst[i]);
+                        println("Unknown instruction char: '{c}'", instructions[j]);
                         exit(1);
                 }
 
-                if ((*ref)->is_end) {
-                    finished += 1;
-                    path_lengths[j] = count;
+                count += 1;
+                if (node->is_end) {
+                    path_lengths[i] = count;
+                    goto next_path;
                 }
             }
-            if (finished == nodes->size)
-                goto end;
         }
+next_path:;
     }
-    end:
+
     // Fined the lowest common multiple of all path lengths
 
     result = path_lengths[0];

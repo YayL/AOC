@@ -2,14 +2,14 @@
 
 #include "hashmap.h"
 
-typedef struct MapNode {
-    char * name;
-    struct MapNode * left, * right;
-} MapNode;
+#define PARSE_NODE_NAME(dest, src, offset) memcpy(dest, src + offset, 3); dest[3] = 0
+#define ENCODE(name) (((long) (name[0] - 'A') & 0b11111) << 12) | (((long) (name[1] - 'A') & 0b11111) << 6) | (((long) (name[2] - 'A') & 0b11111))
+#define IS_END(name) (name[0] == 'Z' && name[1] == 'Z' && name[2] == 'Z')
 
-void print_node(MapNode * node) {
-    println("{s} = [{2s:, }]", node->name, node->left->name, node->right->name);
-}
+typedef struct MapNode {
+    struct MapNode * left, * right;
+    char is_end;
+} MapNode;
 
 int main() {
 
@@ -21,61 +21,65 @@ int main() {
         exit(1);
     }
     
-    long long result = 0;
-    char * line = NULL;
-    size_t length = 0, read;
+    unsigned long long result = 0;
+    char * line = NULL, * instructions;
+    size_t length = 0, read, instruction_length;
 
     MapNode * node, * temp;
-    HashMap * hashmap = new_HashMap(16);
+    MapNode * storage[104026] = {0}; // ENC("ZZZ") + 1
     char * name = NULL, * left = NULL, * right = NULL;
 
-    read = getline(&line, &length, fp);
-    String * instructions = new_string_len(line, read);
+    // Setup Input
+
+    instruction_length = getline(&instructions, &length, fp) - 1;
     getline(&line, &length, fp); // skip empty line
 
     while((read = getline(&line, &length, fp)) != -1) {
-        name = calloc(4, sizeof(char)), left = calloc(4, sizeof(char)), right = calloc(4, sizeof(char));
-        sscanf(line, "%3c = (%3c, %3c)", name, left, right);
-        node = HM_get(hashmap, name);
+        name = malloc(4 * sizeof(char)), left = malloc(4 * sizeof(char)), right = malloc(4 * sizeof(char));
+        PARSE_NODE_NAME(name, line, 0);
+        PARSE_NODE_NAME(left, line, 7);
+        PARSE_NODE_NAME(right, line, 12);
+
+        node = storage[ENCODE(name)];
         if (node == NULL) {
             node = malloc(sizeof(MapNode));
-            node->name = name;
+            node->is_end = IS_END(name);
+            storage[ENCODE(name)] = node;
         }
-        HM_set(hashmap, name, node);
 
-        temp = HM_get(hashmap, left);
+        temp = storage[ENCODE(left)];
         if (temp == NULL) {
             temp = malloc(sizeof(MapNode));
-            temp->name = left;
+            temp->is_end = IS_END(left);
+            storage[ENCODE(left)] = temp;
         }
-        HM_set(hashmap, left, temp);
         node->left = temp;
 
-        temp = HM_get(hashmap, right);
+        temp = storage[ENCODE(right)];
         if (temp == NULL) {
             temp = malloc(sizeof(MapNode));
-            temp->name = right;
+            temp->is_end = IS_END(right);
+            storage[ENCODE(right)] = temp;
         }
-        HM_set(hashmap, right, temp);
         node->right = temp;
     }
- 
-    // find path length for this route
-    node = HM_get(hashmap, "AAA");
-    const char * inst = instructions->c_str;
+
+    // find path length for AAA to ZZZ
+    
+    node = storage[ENCODE("AAA")];
     while (1) {
-        for (int i = 0; i < instructions->length - 1; ++i) {
-            switch (inst[i]) {
+        for (int i = 0; i < instruction_length; ++i) {
+            switch (instructions[i]) {
                 case 'L':
                     node = node->left; break;
                 case 'R':
                     node = node->right; break;
                 default:
-                    println("Unknown instruction char: '{c}'", inst[i]);
+                    println("Unknown instruction char: '{c}'", instructions[i]);
                     exit(1);
             }
             result++;
-            if (!strcmp(node->name, "ZZZ"))
+            if (node->is_end)
                 goto end;
         }
     }
