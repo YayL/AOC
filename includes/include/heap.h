@@ -8,3 +8,5 @@ struct Heap {
 	int size;
 	int capacity;
 };
+
+struct Heap * init_Heap(unsigned int capacity);

@@ -1,5 +1,7 @@
 #include "hashmap.h"
 
+size_t length;
+
 HashMap * new_HashMap(size_t pow_capacity) {
 
 	HashMap * map = malloc(sizeof(HashMap));
@@ -21,9 +23,11 @@ long HM_HashCode(HashMap * map, const char * key) {
 	long long hash_value = 0;
 	long long p_pow = 31;
 
+    length = 0;
 	for (int i = 0; key[i]; ++i) {
 		hash_value = (((hash_value + (key[i] - ' ' + 1)) * p_pow) & m);
 		p_pow = (p_pow * p) & m;
+        /* length++; */
 	}
 	
 	return hash_value & map->capacity;
@@ -69,6 +73,8 @@ void HM_set(HashMap * map, char * key, void* value) {
 	}
 
     HM_Pair * p = malloc(sizeof(HM_Pair));
+    /* p->key = malloc(sizeof(char) * (length + 1)); */
+    /* strcpy(p->key, key); */
     p->key = key;
     p->value = value;
     p->next = map->bucket_list[index];
