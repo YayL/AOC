@@ -11,6 +11,7 @@
 **.out
 **/test.*
 **/input.txt
+**/vgcore.*
 
 !/README.md
 !/CMakeLists-Copy.txt

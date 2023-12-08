@@ -7,45 +7,40 @@
 
 #define PARSE_NODE_NAME(dest, src, offset) memcpy(dest, src + offset, 3); dest[3] = 0
 #define ENCODE(name) (((long) (name[0] - 'A') & 0b11111) << 12) | (((long) (name[1] - 'A') & 0b11111) << 6) | (((long) (name[2] - 'A') & 0b11111))
+#define IS_END(name) (name[2] == 'Z')
 
 typedef struct MapNode {
     struct MapNode * left, * right;
     char is_end;
 } MapNode;
 
-unsigned long long gcd(unsigned long long a, unsigned long long int b) 
-{ 
-    if (b == 0) 
-        return a; 
-    return gcd(b, a % b); 
-} 
+MapNode * storage[104026];
+char * instructions;
+size_t instruction_length;
+struct List * nodes;
+
+
+unsigned long long gcd(unsigned long long a, unsigned long long int b) { 
+    return (b == 0) ? a : gcd(b, a % b);
+}
   
-unsigned long long lcm(unsigned long long a, unsigned long long b) { return (a / gcd(a, b)) * b; } 
+unsigned long long lcm(unsigned long long a, unsigned long long b) { 
+    return (a / gcd(a, b)) * b; 
+}
 
-int main() {
-    start_timer();
-    FILE * fp = fopen("input.txt", "r");
-
-    if (fp == NULL) {
-        println("File not found");
-        exit(1);
-    }
-
-    unsigned long long result = 0;
-    char * line = NULL, * instructions;
-    size_t length = 0, read, instruction_length;
-
+void parse_nodes(FILE * fp) {
+    char * line = NULL, * name, * left, * right;
+    size_t read, length;
+    
     MapNode * node, * temp;
-    MapNode * storage[104026] = {0}; // ENC("ZZZ") + 1
-    struct List * nodes = init_list(sizeof(MapNode *));
-    char * name = NULL, * left = NULL, * right = NULL;
-
-    // Setup input
+    nodes = init_list(sizeof(MapNode *));
 
     instruction_length = getline(&instructions, &length, fp) - 1;
-    getline(&line, &length, fp); // skip empty line
 
-    while((read = getline(&line, &length, fp)) != -1) {
+    while((line = NULL) || (read = getline(&line, &length, fp)) != -1) {
+        if (line[0] == '\n') {
+            continue;
+        }
         name = malloc(4 * sizeof(char)), left = malloc(4 * sizeof(char)), right = malloc(4 * sizeof(char));
         PARSE_NODE_NAME(name, line, 0);
         PARSE_NODE_NAME(left, line, 7);
@@ -54,7 +49,7 @@ int main() {
         node = storage[ENCODE(name)];
         if (node == NULL) {
             node = malloc(sizeof(MapNode));
-            node->is_end = name[2] == 'Z';
+            node->is_end = IS_END(name);
             storage[ENCODE(name)] = node;
         }
         if (name[2] == 'A') {
@@ -64,7 +59,7 @@ int main() {
         temp = storage[ENCODE(left)];
         if (temp == NULL) {
             temp = malloc(sizeof(MapNode));
-            temp->is_end = left[2] == 'Z';
+            temp->is_end = IS_END(left);
             storage[ENCODE(left)] = temp;
         }
         node->left = temp;
@@ -72,15 +67,16 @@ int main() {
         temp = storage[ENCODE(right)];
         if (temp == NULL) {
             temp = malloc(sizeof(MapNode));
-            temp->is_end = right[2] == 'Z';
+            temp->is_end = IS_END(right);
             storage[ENCODE(right)] = temp;
         }
         node->right = temp;
     }
+}
 
-    size_t count = 0, path_lengths[nodes->size];
-
-    // Find the path lengths for each start node
+void find_lengths(size_t * path_lengths) {
+    MapNode * node;
+    size_t count;
 
     for (int i = 0; i < nodes->size; ++i) { 
         node = nodes->items[i];
@@ -107,10 +103,23 @@ int main() {
         }
 next_path:;
     }
+}
 
-    // Fined the lowest common multiple of all path lengths
+int main() {
+    start_timer();
+    FILE * fp = fopen("input.txt", "r");
 
-    result = path_lengths[0];
+    if (fp == NULL) {
+        println("File not found");
+        exit(1);
+    }
+
+    parse_nodes(fp);
+
+    size_t path_lengths[nodes->size];
+    find_lengths(&path_lengths[0]);
+
+    unsigned long long result = path_lengths[0];
     for (int i = 1; i < nodes->size; ++i) {
         result = lcm(result, path_lengths[i]);
     }

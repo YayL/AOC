@@ -5,9 +5,6 @@ set -e
 dir="$1\/day$(printf '%02d' $2)"
 path="$dir\/part$3.c"
 
-echo $3
-echo $path
-
 cat CMakeLists-Copy.txt | sed "s/\$\$PATH/$path/g" > CMakeLists.txt
 
 if [ "$4" = "-d" ]; then
@@ -27,7 +24,8 @@ clear
 cd "../$1/day$(printf '%02d' $2)/"
 
 if [ "$4" = "-d" ]; then
-    valgrind $WD/AOC
+    shift 4
+    valgrind "$@" "$WD/AOC"
 else
     $WD/AOC
 fi
