@@ -25,8 +25,9 @@ void parse_nodes(FILE * fp) {
     MapNode * node, * temp;
 
     instruction_length = getline(&instructions, &length, fp) - 1;
+    getline(&line, &length, fp); line = NULL;
 
-    while((line = NULL) || (read = getline(&line, &length, fp)) != -1) {
+    while((read = getline(&line, &length, fp)) != -1) {
         if (line[0] == '\n') {
             continue;
         }
