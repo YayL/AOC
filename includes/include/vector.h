@@ -3,7 +3,7 @@
 #include "common.h"
 
 struct Vector {
-	long * items;
+	long long * items;
 	size_t size;
 	size_t capacity;
 	size_t item_size;
@@ -12,7 +12,7 @@ struct Vector {
 struct Vector * init_vector();
 
 void free_vector(struct Vector * vector);
-void vector_push(struct Vector * vector, long item);
+void vector_push(struct Vector * vector, long long item);
 
 long vector_pop(struct Vector * vector);
 

@@ -120,6 +120,7 @@ int main() {
     size_t path_lengths[nodes->size];
     find_lengths(&path_lengths[0]);
 
+    // this feels so wrong
     unsigned long long result = path_lengths[0];
     for (int i = 1; i < nodes->size; ++i) {
         result = lcm(result, path_lengths[i]);

@@ -16,12 +16,11 @@ void free_vector(struct Vector * vector) {
 
 }
 
-void vector_push(struct Vector * vector, long item) {
+void vector_push(struct Vector * vector, long long item) {
 	if (!vector->capacity) { // Incrementing here as it is just easier and not wasting a line for it
 		vector->items = malloc(vector->item_size);
 		vector->capacity = 1;
 	} else if(vector->capacity < vector->size) {
-        puts("1");
         vector->capacity = vector->size * 2;
 		vector->items = realloc(vector->items, vector->capacity * vector->item_size);
 	}
