@@ -1,4 +1,5 @@
 #include "common.h"
+#include "timer.h"
 
 #define WIDTH 150
 #define HEIGHT WIDTH
@@ -170,7 +171,7 @@ int find_enclosed() {
 
 int main() {
     start_timer();
-    FILE * fp = fopen("real_input.txt", "r");
+    FILE * fp = fopen("input.txt", "r");
 
     if (fp == NULL) {
         println("File not found");
@@ -195,6 +196,9 @@ int main() {
         }
         height += 1;
     }
+
+    printf("Parsing time: %.3fms\n", (double)stop_timer() / 1000);
+    start_timer();
 
     find_loop(start_x, start_y, 0);
     result = find_enclosed();
