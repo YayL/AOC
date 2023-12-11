@@ -41,10 +41,10 @@ long get_distance_between(long first, long second) {
     long result = x2 - x1 + y2 - y1;
 
     for (long x = x1 + 1; x < x2; ++x) {
-        result += empty_columns[x] * (1e6 - 1);
+        result += empty_columns[x];
     }
     for (long y = y1 + 1; y < y2; ++y) {
-        result += empty_rows[y] * (1e6 - 1);
+        result += empty_rows[y];
     }
     
     return result;
@@ -87,12 +87,9 @@ int main() {
         empty_columns[x] = !is_not_empty;
     }
 
-    long dist;
-
     for (long i = 0; i < coords->size; ++i) {
         for (long j = i + 1; j < coords->size; ++j) {
-            dist = get_distance_between(coords->items[i], coords->items[j]);
-            result += dist;
+            result += get_distance_between(coords->items[i], coords->items[j]);
         }
     }
 
