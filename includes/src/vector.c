@@ -54,7 +54,12 @@ long vector_at(struct Vector * vector, size_t index) {
 }
 
 void vector_reserve(struct Vector * vector, size_t size_to_reserve) {
-	vector->capacity += size_to_reserve;
+    size_t value = vector->size + size_to_reserve;
+    if (value < vector->capacity) {
+        return;
+    }
+
+	vector->capacity = value;
 	vector->items = realloc(vector->items, vector->capacity * vector->item_size);
 }
 

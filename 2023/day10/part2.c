@@ -202,6 +202,7 @@ int main() {
 
     find_loop(start_x, start_y, 0);
     result = find_enclosed();
+    //print_map();
 
     printf("Execution time: %.3fms\n", (double)stop_timer() / 1000);
     println("Result: {llu}", result);
