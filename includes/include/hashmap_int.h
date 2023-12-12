@@ -18,7 +18,7 @@ HashMap_int * new_HashMap_int(size_t pow_capacity);
 
 long HashCode_int(HashMap_int * map, long key);
 
-long * HM_int_get(HashMap_int * map, long key);
+long HM_int_get(HashMap_int * map, long key);
 
 long HM_int_has(HashMap_int * map, long key);
 

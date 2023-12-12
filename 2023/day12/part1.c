@@ -1,6 +1,9 @@
 #include "common.h"
+#include "hashmap_int.h"
 #include "vector.h"
 #include <stdio.h>
+
+#define INDEX_OF(index, group_index, count) (index << 16 | group_index << 8 | count)
 
 struct Vector * groups;
 
@@ -14,10 +17,7 @@ void print_index(char * line, size_t index) {
 
 // this can be optimized to use a stack that keeps: index, last_dot and group_index
 // it can be combined into one long or something to make it easier
-size_t search_possible(char * line, size_t length, size_t group_index, size_t count, size_t index) {
-    
-    
-
+size_t search_possible(char * line, size_t group_index, size_t count, size_t index) {
     while (1) {
         switch (line[index]) {
             case '\0':
@@ -54,16 +54,19 @@ size_t search_possible(char * line, size_t length, size_t group_index, size_t co
             }
             case '?':
                 goto skip_while;
+            default:
+                println("\nInvalid characther: '{c}'", line[index]);
+                exit(1);
         }
     }
-skip_while:
+skip_while:;
+
 
     line[index] = '#';
-
-    size_t possibilities = search_possible(line, length, group_index, count + 1, index + 1);
+    size_t possibilities = search_possible(line, group_index, count, index);
 
     line[index] = '.';
-    possibilities += search_possible(line, length, group_index, count, index);
+    possibilities += search_possible(line, group_index, count, index);
 
     line[index] = '?';
 
@@ -73,7 +76,7 @@ skip_while:
 int main() {
 
     start_timer();
-    FILE * fp = fopen("input.txt", "r");
+    FILE * fp = fopen("real_input.txt", "r");
 
     if (fp == NULL) {
         println("File not found");
@@ -91,17 +94,19 @@ int main() {
 
     while ((read = getline(&line, &length, fp)) != -1) {
         vector_clear(groups);
+        
         i = 0;
         while (line[i++] != ' ');
-        springs_length = i - 1;
-        line[springs_length] = '\0';
+        springs_length = i;
+        line[springs_length - 1] = '\0';
+
         while (i < read) {
             sscanf(line + i, "%d%n", &value, &temp);
             i += temp + 1;
             vector_push(groups, value);
         }
-
-        result += search_possible(line, springs_length, 0, 0, 0);
+ 
+        result += search_possible(line, 0, 0, 0);
     }
 
     printf("Execution time: %.3fms\n", (double)stop_timer() / 1000);

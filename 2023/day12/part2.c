@@ -1,6 +1,8 @@
 #include "common.h"
+#include "hashmap_int.h"
 #include "vector.h"
-#include <stdio.h>
+
+#define INDEX_OF(index, group_index, count) (index << 16 | group_index << 8 | count)
 
 struct Vector * groups;
 
@@ -12,9 +14,7 @@ void print_index(char * line, size_t index) {
     puts("^");
 }
 
-// this can be optimized to use a stack that keeps: index, last_dot and group_index
-// it can be combined into one long or something to make it easier
-size_t search_possible(char * line, size_t group_index, size_t count, size_t index) {
+size_t search_possible(char * line, HashMap_int * cache, size_t group_index, size_t count, size_t index) {
     while (1) {
         switch (line[index]) {
             case '\0':
@@ -56,15 +56,23 @@ size_t search_possible(char * line, size_t group_index, size_t count, size_t ind
                 exit(1);
         }
     }
-skip_while:
+skip_while:;
+
+    size_t key = INDEX_OF(index, group_index, count);
+    size_t possibilities = HM_int_get(cache, key);
+    if (possibilities != -1) {
+        return possibilities;
+    }
 
     line[index] = '#';
-    size_t possibilities = search_possible(line, group_index, count, index);
+    possibilities = search_possible(line, cache, group_index, count, index);
 
     line[index] = '.';
-    possibilities += search_possible(line, group_index, count, index);
+    possibilities += search_possible(line, cache, group_index, count, index);
 
     line[index] = '?';
+
+    HM_int_set(cache, key, possibilities);
 
     return possibilities;
 }
@@ -86,6 +94,8 @@ int main() {
 
     int value, temp, i, row = 0;
 
+    HashMap_int * map;
+
     groups = init_vector();
 
     while ((read = getline(&line, &length, fp)) != -1) {
@@ -102,6 +112,8 @@ int main() {
             vector_push(groups, value);
         }
 
+        temp = springs_length * 5;
+
         fixed_line = malloc(sizeof(char) * (5 * springs_length + 1));
         vector_reserve(groups, groups->size * 5);
         
@@ -114,9 +126,9 @@ int main() {
         springs_length = springs_length * 5 - 1;
         fixed_line[springs_length] = '\0';
 
-        size_t res_temp = search_possible(fixed_line, 0, 0, 0);
-        println("{i}: {llu}", ++row, res_temp);
-        result += res_temp;
+        map = new_HashMap_int(16);
+
+        result += search_possible(fixed_line, map, 0, 0, 0);
     }
 
     printf("Execution time: %.3fms\n", (double)stop_timer() / 1000);

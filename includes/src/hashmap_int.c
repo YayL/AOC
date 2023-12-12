@@ -17,14 +17,16 @@ long HashCode_int(HashMap_int * map, long key) {
 	return key & map->capacity;
 }
 
-long * HM_int_get(HashMap_int * map, long key) {
+long HM_int_get(HashMap_int * map, long key) {
 	HM_Pair_int * current = map->bucket_list[HashCode_int(map, key)];
 
 	while (current) {
 		if (current->key == key)
-			return &current->value;
+			return current->value;
 		current = current->next;
 	}
+
+    return -1;
 
 	println("[HashMap_int]: Key '{li}' was not found", key);
 	exit(1);
