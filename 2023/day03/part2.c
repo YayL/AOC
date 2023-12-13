@@ -38,7 +38,7 @@ void is_gear_at(int x, int y, struct Number * number) {
 }
 
 int main() {
-
+    start_timer();
     FILE * fp = fopen("input.txt", "r");
 
     if (fp == NULL) {
@@ -123,6 +123,7 @@ int main() {
         }
     }
 
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Final: {i}", sum);
 
 }

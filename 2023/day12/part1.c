@@ -76,7 +76,7 @@ skip_while:;
 int main() {
 
     start_timer();
-    FILE * fp = fopen("real_input.txt", "r");
+    FILE * fp = fopen("input.txt", "r");
 
     if (fp == NULL) {
         println("File not found");
@@ -109,6 +109,6 @@ int main() {
         result += search_possible(line, 0, 0, 0);
     }
 
-    printf("Execution time: %.3fms\n", (double)stop_timer() / 1000);
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Result: {lli}", result);
 }

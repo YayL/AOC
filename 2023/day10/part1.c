@@ -115,6 +115,6 @@ int main() {
         }
     }
 
-    printf("Execution time: %.3fms\n", (double)stop_timer() / 1000);
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Result: {llu}", result);
 }

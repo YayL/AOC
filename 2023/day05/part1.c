@@ -131,6 +131,6 @@ int main() {
             min = location;
     }
 
-    printf("Execution time: %.3fms\n", (double)stop_timer() / 1000);
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Min: {i}", min);
 }

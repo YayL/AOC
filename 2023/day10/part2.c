@@ -197,13 +197,10 @@ int main() {
         height += 1;
     }
 
-    printf("Parsing time: %.3fms\n", (double)stop_timer() / 1000);
-    start_timer();
-
     find_loop(start_x, start_y, 0);
     result = find_enclosed();
     //print_map();
 
-    printf("Execution time: %.3fms\n", (double)stop_timer() / 1000);
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Result: {llu}", result);
 }

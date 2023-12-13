@@ -5,6 +5,7 @@
 #define MAX_BLUE 14
 
 int main() {
+    start_timer();
     FILE * fp = fopen("input.txt", "r");
 
     if (fp == NULL) {
@@ -51,6 +52,8 @@ int main() {
         sum += id;
 next:
     }
+
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Sum: {i}", sum);
 
 }

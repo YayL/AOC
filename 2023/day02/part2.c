@@ -1,6 +1,7 @@
 #include "common.h"
 
 int main() {
+    start_timer();
     FILE * fp = fopen("input.txt", "r");
 
     if (fp == NULL) {
@@ -45,5 +46,7 @@ int main() {
         }
         sum += red * green * blue;
     }
+
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Sum: {i}", sum);
 }

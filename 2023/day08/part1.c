@@ -100,6 +100,6 @@ int main() {
 
     unsigned long long result = find_length();
 
-    printf("Execution time: %.3fms\n", (double)stop_timer() / 1000);
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Result: {lli}", result);
 }

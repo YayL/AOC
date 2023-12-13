@@ -52,6 +52,7 @@ size_t convert_seed_to_location(size_t seed) {
 
 int main() {
 
+    start_timer();
     FILE * fp = fopen("input.txt", "r");
 
     if (fp == NULL) {
@@ -140,5 +141,6 @@ int main() {
         println("{i}: {i}", i, min);
     }
 
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Min: {i}", min);
 }

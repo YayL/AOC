@@ -1,7 +1,7 @@
 #include "common.h"
 
 int main() {
-
+    start_timer();
     FILE * fp = fopen("input.txt", "r");
 
     if (fp == NULL) {
@@ -27,5 +27,6 @@ int main() {
         first = 0;
     }
 
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Number: {u}", sum);
 }

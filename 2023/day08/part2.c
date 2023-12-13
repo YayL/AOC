@@ -126,6 +126,6 @@ int main() {
         result = lcm(result, path_lengths[i]);
     }
 
-    printf("Execution time: %.3fms\n", (double)stop_timer() / 1000);
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Result: {lli}", result);
 }

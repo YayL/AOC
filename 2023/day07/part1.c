@@ -125,6 +125,6 @@ int main() {
         sum += ((Hand *) hands->items[rank])->bid * (rank + 1);
     }
 
-    printf("Execution time: %.3fms\n", (double)stop_timer() / 1000);
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Result: {li}", sum);
 }

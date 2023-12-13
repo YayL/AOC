@@ -6,7 +6,7 @@
                      last = num
 
 int main() {
-
+    start_timer();
     FILE * fp = fopen("input.txt", "r");
 
     if (fp == NULL) {
@@ -49,5 +49,6 @@ int main() {
         first = 0, last = 0;
     }
 
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Number: {u}", sum);
 }

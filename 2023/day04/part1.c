@@ -1,4 +1,5 @@
 #include "common.h"
+#include "timer.h"
 #include "vector.h"
 
 int main() {
@@ -49,8 +50,7 @@ int main() {
 
     }
 
-    unsigned long time = stop_timer();
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Sum: {i}", sum);
-    printf("Execution time: %.3fms\n", (double)time / 1000);
 
 }

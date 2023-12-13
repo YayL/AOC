@@ -56,6 +56,6 @@ int main() {
 
     unsigned long long product = 1 + fix_max(max) - fix_min(min);
 
-    printf("Execution time: %.3fms\n", (double)stop_timer() / 1000);
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Result: {lu}", product);
 }

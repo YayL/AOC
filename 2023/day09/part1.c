@@ -7,7 +7,7 @@ long long get_next_in_sequence(struct Vector * sequence) {
     struct Vector * vec = sequence, * temp;
     char allzero = 0;
 
-    while (!allzero) { // end when the difference length is 4 as per the instructions
+    while (!allzero) { // end when all are 0
         list_push(differences, vec);
         temp = init_vector();
         vector_reserve(temp, vec->size - 1);
@@ -56,6 +56,6 @@ int main() {
         sum += get_next_in_sequence(sequence);
     }
 
-    printf("Execution time: %.3fms\n", (double)stop_timer() / 1000);
+    printf("Execution time: %.3fms\n", stop_timer());
     println("Result: {llu}", sum);
 }
