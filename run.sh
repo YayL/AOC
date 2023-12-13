@@ -27,5 +27,6 @@ if [ "$4" = "-d" ]; then
     shift 4
     valgrind "$@" "$WD/AOC"
 else
-    $WD/AOC
+    shift 3
+    $WD/AOC "$@"
 fi
