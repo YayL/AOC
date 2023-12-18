@@ -1,6 +1,6 @@
 #include "heap_node.h"
 
-struct HeapNode * init_heap_node(void * value, int compare) {
+struct HeapNode * init_heap_node(void * value, long compare) {
     struct HeapNode * ret = malloc(sizeof(struct HeapNode));
     ret->ptr = value;
     ret->compare = compare;
