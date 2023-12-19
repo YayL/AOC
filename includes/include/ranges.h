@@ -10,6 +10,8 @@ typedef struct range {
 
 Range * new_range(long long start, long long end);
 
+Range * range_copy(Range * src);
+
 char range_is_intersect (Range * current, long long point);
 
 Range * range_get_intersection (Range * current, long long point);

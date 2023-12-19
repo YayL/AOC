@@ -8,6 +8,10 @@ Range * new_range(long long start, long long end) {
 	return range;
 }
 
+Range * range_copy(Range * src) {
+    return new_range(src->start, src->end);
+}
+
 char range_is_intersect (Range * current, long long point) {
 	while (current->start <= point) {
 		if (point <= current->end)
@@ -97,7 +101,7 @@ void range_bisect(Range * root, long long point) {
 int range_get_width(Range * current) {
 	int width = 0;
 	while (current != NULL) {
-		width += (current->end - current->start) + 1;
+		width += MAX((current->end - current->start) + 1, 0);
 		current = current->next;
 	}
 	return width;
