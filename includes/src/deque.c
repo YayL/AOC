@@ -47,7 +47,8 @@ void push_back (Deque * deque, void * item) {
 }
 
 void push_front (Deque * deque, void * item) {
-	if (++deque->size == deque->capacity) {
+    deque->start += 1;
+	if (deque->size == deque->capacity) {
 		deque_expand(deque);
 	}
 	

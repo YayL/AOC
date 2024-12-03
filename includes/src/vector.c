@@ -1,12 +1,9 @@
 #include "vector.h"
 
-struct Vector * init_vector() {
+#define ITEM_SIZE sizeof(long long)
 
+struct Vector * init_vector() {
 	struct Vector * vector = calloc(1, sizeof(struct Vector));
-	vector->size = 0;
-	vector->capacity = 0;
-	vector->item_size = sizeof(long);
-	
 	return vector;
 }
 
@@ -17,12 +14,12 @@ void free_vector(struct Vector * vector) {
 }
 
 void vector_push(struct Vector * vector, long long item) {
-	if (!vector->capacity) { // Incrementing here as it is just easier and not wasting a line for it
-		vector->items = malloc(vector->item_size);
+	if (!vector->capacity) {
+		vector->items = malloc(ITEM_SIZE);
 		vector->capacity = 1;
-	} else if(vector->capacity < vector->size) {
+	} else if (vector->capacity <= vector->size) {
         vector->capacity = vector->size * 2;
-		vector->items = realloc(vector->items, vector->capacity * vector->item_size);
+		vector->items = realloc(vector->items, vector->capacity * ITEM_SIZE);
 	}
 
 	vector->items[vector->size++] = item;
@@ -60,7 +57,7 @@ void vector_reserve(struct Vector * vector, size_t size_to_reserve) {
     }
 
 	vector->capacity = value;
-	vector->items = realloc(vector->items, vector->capacity * vector->item_size);
+	vector->items = realloc(vector->items, vector->capacity * ITEM_SIZE);
 }
 
 struct Vector * vector_copy(struct Vector * src) {
@@ -70,9 +67,8 @@ struct Vector * vector_copy(struct Vector * src) {
 	}
 
 	dest->size = src->size;
-	dest->item_size = src->item_size;
-	vector_reserve(dest, dest->size);
-	memcpy(dest->items, src->items, src->size * src->item_size);
+	vector_reserve(dest, dest->size); // capacity is set in vector_reserve
+	memcpy(dest->items, src->items, src->size * ITEM_SIZE);
 	
 	return dest;
 }
@@ -99,7 +95,7 @@ void vector_print(struct Vector * vec) {
 
 void vector_sort(struct Vector * vec) {
     long low = 0, high = vec->size - 1, value, temp, pivot, top = -1;
-    long * items = vec->items, stack[(int)log2(high - low) * 5];
+    long long * items = vec->items, stack[vec->size];
  
     stack[++top] = low;
     stack[++top] = high;
@@ -140,4 +136,30 @@ void vector_sort(struct Vector * vec) {
             stack[++top] = high;
         }
     }
+}
+
+size_t vector_unique(struct Vector * vec) {
+    if (vec->size == 0) {
+        return 0;
+    }
+
+    struct Vector * copy = vector_copy(vec);
+
+    /* println("Copy: {i}", copy->size); */
+
+    vector_sort(copy);
+
+    size_t count = 1;
+    for (int i = 1; i < copy->size; ++i) {
+        /* println("{c}, {c}", copy->items[i - 1] + 'A', copy->items[i] + 'A'); */
+        count += copy->items[i - 1] != copy->items[i];
+    }
+    
+    return count;
+}
+
+void vector_extend(struct Vector * dest, struct Vector * src) {
+    dest->size += src->size;
+    vector_reserve(dest, src->size); 
+	memcpy(dest->items + src->size, src->items, src->size * ITEM_SIZE);
 }

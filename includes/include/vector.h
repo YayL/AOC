@@ -31,3 +31,7 @@ void vector_clear(struct Vector * vector);
 void vector_print(struct Vector * vec);
 
 void vector_sort(struct Vector * vec);
+
+size_t vector_unique(struct Vector * vec);
+
+void vector_extend(struct Vector * dest, struct Vector * src);
