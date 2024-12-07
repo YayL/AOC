@@ -28,7 +28,6 @@ char string_at(String * src, size_t index) {
 }
 
 void string_concat(String * dest, String * src) {
-
 	dest->length += src->length;
 	
 	char * temp_str = realloc((void *)dest->c_str, (dest->length + 1) * sizeof(char));
