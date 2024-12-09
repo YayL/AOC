@@ -106,7 +106,7 @@ int guard_count_cycles(Guard guard) {
         size_t x = ghost_guard.x, y = ghost_guard.y;
 
         // check if cycle structure has already been checked
-        if (obstruction_map[y][x] == 0 && (map[y][x] == '#' || map[y][x] == '.')) {
+        if (obstruction_map[y][x] == 0) {
             ghost_guard = guard;
             ghost_guard.dir = (guard.dir + 1) % DIRECTION_SIZE;
             char c = map[y][x];
@@ -176,17 +176,6 @@ int main() {
     }
 
     result = guard_count_cycles(guard);
-
-    for (size_t y = 0; y < HEIGHT; ++y) {
-        for (size_t x = 0; x < WIDTH; ++x) {
-            if (obstruction_map[y][x]) {
-                putchar('O');
-            } else {
-                putchar(map[y][x]);
-            }
-        }
-        puts("");
-    }
 
     printf("Execution time: %.3fms\n", stop_timer());
     println("Result: {lli}", result);

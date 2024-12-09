@@ -22,11 +22,11 @@ WD="$(pwd)"
 
 clear
 cd "../$1/day$(printf '%02d' $2)/"
+shift 3
 
-if [ "$4" = "-d" ]; then
-    shift 4
+if [ "$1" = "-d" ] ; then
+    shift 1
     valgrind "$@" "$WD/AOC"
 else
-    shift 3
     $WD/AOC "$@"
 fi

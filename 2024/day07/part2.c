@@ -33,7 +33,7 @@ char evaluate(Calibration calibration, size_t index, NUMERIC_TYPE result) {
 
 int main() {
     start_timer();
-    FILE * fp = fopen("input.txt", "r");
+    FILE * fp = fopen("./input.txt", "r");
 
     if (fp == NULL) {
         println("File not found");
