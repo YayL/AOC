@@ -8,7 +8,7 @@ Set * new_set(size_t pow_capacity) {
 	set->buckets = 0;
 	set->total = 0;
 
-	set->bucket_list = calloc(set->capacity + 1, sizeof(Pair *));
+	set->bucket_list = calloc(set->capacity + 1, sizeof(_set_Pair *));
 
 	return set;
 }
@@ -31,7 +31,7 @@ long HashCode(Set * set, const char * key) {
 }
 
 int set_has(Set * set, const char * key) {
-	Pair * current = set->bucket_list[HashCode(set, key)];
+	_set_Pair * current = set->bucket_list[HashCode(set, key)];
 
 	while (current) {
 		if (!strcmp(current->key, key))
@@ -45,7 +45,7 @@ int set_has(Set * set, const char * key) {
 void set_add(Set * set, const char * key) {
 
 	long long index = HashCode(set, key);
-	Pair * current = set->bucket_list[index];
+	_set_Pair * current = set->bucket_list[index];
 
 	while (current) {
 		if (!strcmp(current->key, key)) {
@@ -58,7 +58,7 @@ void set_add(Set * set, const char * key) {
 	char * key_copy = malloc((str_len + 1) * sizeof(char));
 	strcpy(key_copy, key);
 
-    Pair * p = malloc(sizeof(Pair));
+    _set_Pair * p = malloc(sizeof(_set_Pair));
     p->key = key_copy;
     p->next = set->bucket_list[index];
 	if (p->next == NULL)
@@ -70,7 +70,7 @@ void set_add(Set * set, const char * key) {
 void set_remove(Set * set, const char * key) {
 	
 	long long index = HashCode(set, key);
-	Pair * current = set->bucket_list[index], * temp;
+	_set_Pair * current = set->bucket_list[index], * temp;
 	size_t depth = 0;
 
 	while (current) {
@@ -102,7 +102,7 @@ void set_remove(Set * set, const char * key) {
 }
 
 void set_print(Set * set) {
-	Pair * bucket, * current;
+	_set_Pair * bucket, * current;
 	println("[Buckets: {lu}, Total: {lu}]:", set->buckets, set->total);
 	for (int i = 0; i < set->capacity; ++i) {
 		bucket = set->bucket_list[i];
@@ -116,7 +116,7 @@ void set_print(Set * set) {
 
 void set_clear (Set * set) {
 
-	Pair * current, * next;
+	_set_Pair * current, * next;
 	for (int i = 0; i < set->capacity; ++i) {
 		current = set->bucket_list[i];
 		while (current) {
@@ -132,7 +132,7 @@ void set_clear (Set * set) {
 
 void set_free(Set * set) {
 	
-	Pair * current, * next;
+	_set_Pair * current, * next;
 
 	for (int i = 0; i < set->capacity; ++i) {
 		current = set->bucket_list[i];

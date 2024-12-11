@@ -2,13 +2,13 @@
 
 #include "common.h"
 
-typedef struct pair {
+typedef struct _set_pair {
 	char * key;
-	struct pair * next;
-} Pair;
+	struct _set_pair * next;
+} _set_Pair;
 
 typedef struct set {
-	Pair ** bucket_list;
+	_set_Pair ** bucket_list;
 	size_t capacity;
 	size_t buckets;
 	size_t total;
