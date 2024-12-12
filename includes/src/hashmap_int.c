@@ -13,11 +13,11 @@ HashMap_int * new_HashMap_int(size_t pow_capacity) {
 	return map;
 }
 
-long HashCode_int(HashMap_int * map, long key) {
+long HashCode_int(HashMap_int * map, KEY_TYPE key) {
 	return key & map->capacity;
 }
 
-long HM_int_get(HashMap_int * map, long key) {
+VALUE_TYPE HM_int_get(HashMap_int * map, KEY_TYPE key) {
 	HM_Pair_int * current = map->bucket_list[HashCode_int(map, key)];
 
 	while (current) {
@@ -32,7 +32,7 @@ long HM_int_get(HashMap_int * map, long key) {
 	exit(1);
 }
 
-long HM_int_has(HashMap_int * map, long key) {
+char HM_int_has(HashMap_int * map, KEY_TYPE key) {
 	HM_Pair_int * current = map->bucket_list[HashCode_int(map, key)];
 
 	while (current) {
@@ -44,7 +44,7 @@ long HM_int_has(HashMap_int * map, long key) {
 	return 0;
 }
 
-void HM_int_set(HashMap_int * map, long key, long value) {
+void HM_int_set(HashMap_int * map, KEY_TYPE key, VALUE_TYPE value) {
 
 	long long index = HashCode_int(map, key);
 	HM_Pair_int * current = map->bucket_list[index];
@@ -68,9 +68,9 @@ void HM_int_set(HashMap_int * map, long key, long value) {
     map->total++;
 }
 
-long long HM_int_remove(HashMap_int * map, long key) {
+VALUE_TYPE HM_int_remove(HashMap_int * map, KEY_TYPE key) {
 	
-	long long index = HashCode_int(map, key);
+	long index = HashCode_int(map, key);
 	HM_Pair_int * current = map->bucket_list[index], * temp;
 	size_t depth = 0;
 
@@ -99,7 +99,7 @@ long long HM_int_remove(HashMap_int * map, long key) {
 	--map->total;
 
 
-	long value = current->value;
+	VALUE_TYPE  value = current->value;
 	
 	free(current);
 	
