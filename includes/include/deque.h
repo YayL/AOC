@@ -36,4 +36,4 @@ void * deque_remove (Deque * deque, int index);
 
 Deque * deque_copy (Deque * src);
 
-void deque_print (Deque * deque, void (*print_item)());
+void deque_print (Deque * deque, void (*print_item)(void *));

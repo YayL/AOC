@@ -131,7 +131,7 @@ void * deque_remove (Deque * deque, int index) {
 	return item;
 }
 
-Deque * deque_copy (Deque * src) {
+Deque * deque_copy(Deque * src) {
 
 	Deque * copy = init_deque(src->item_size);
 	if (src == NULL) {
@@ -153,7 +153,7 @@ Deque * deque_copy (Deque * src) {
 	return copy;
 }
 
-void deque_print (Deque * deque, void (*print_item)()) {
+void deque_print(Deque * deque, void (*print_item)(void *)) {
 
 	for (size_t i = deque->start; i != deque->end; i = (i + 1) & (deque->capacity - 1)) {
 		print_item(deque->items[i]);
